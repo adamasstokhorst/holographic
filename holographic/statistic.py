@@ -4,7 +4,7 @@ from .helpers import euc_norm, variance, partition
 
 def calculate_statistic(block_size, handler_class, *args, **kwargs):
     """Reads data from given filenames."""
-    rxx = numpy.zeros((block_size**2, block_size**2))
+    rxx = numpy.zeros((block_size, block_size))
     ctr = 0
     for fn in args:
         data = handler_class(fn, block_size, 'r', **kwargs)
@@ -16,7 +16,7 @@ def calculate_statistic(block_size, handler_class, *args, **kwargs):
 
     zipped_lamda = sorted(zip(lamda, range(len(lamda))), reverse=True)
     lamda, new_order = zip(*zipped_lamda)
-    perm_matrix = numpy.zeros((block_size**2, block_size**2))
+    perm_matrix = numpy.zeros((block_size, block_size))
     for i, j in enumerate(new_order):
         perm_matrix[j, i] = 1
     psi = numpy.matmul(psi, perm_matrix)
@@ -25,6 +25,7 @@ def calculate_statistic(block_size, handler_class, *args, **kwargs):
 
 
 def get_min_entries(big_m, big_n, small_m, vars, l_set):
+    """Calculate the distribution of subspaces for the greatest MSE reduction."""
     # size-check
     l_set = l_set[:big_m]
     if len(l_set) < big_m:
@@ -163,7 +164,6 @@ def calculate_partition(space_size, num_subspace, subspace_size, sigma, lamda, e
     for n in range(1, num_subspace+1):
         if n == erasure_clip:
             break
-        print num_subspace - n,
         all_variances.append(list())
         for partitions in partition_list:
             values = []
@@ -181,42 +181,3 @@ def calculate_partition(space_size, num_subspace, subspace_size, sigma, lamda, e
         output_values.append((p, euc_norm(p_var)))
     output_values.sort(key=lambda x: x[1])
     return output_values[0][0]
-
-
-# def load_statistic(settings):
-#     # accepts settings module, returns loaded statistics
-#     with open(settings.partition_fn, 'rb') as f:
-#         partition = pickle.load(f)
-#     with open(settings.psi_fn, 'rb') as f:
-#         psi = pickle.load(f)
-#     with open(settings.lambda_fn, 'rb') as f:
-#         lamda = pickle.load(f)
-#     operators = map(lambda a: to_operator(a, settings.big_m), partition)
-#     psi_operators = map(lambda a: numpy.dot(a.T, psi.T), operators)
-#     r_yy = numpy.diag(lamda)
-#     return psi_operators, operators, psi, r_yy
-
-
-# def simulate(iterable, settings, ell=1, lost_space=None):
-#     """Yield vectors from simulated recovery. Data are assumed to be between -1 and 1, centered at 0."""
-#     mod_op, op, psi, r_yy = load_statistic(settings)
-#     subspace_size, num_subspace = settings.small_m, settings.big_n
-#     sigma = settings.sigma
-#
-#     if not lost_space:
-#         lost_space = random.sample(range(num_subspace), num_subspace - ell)
-#     noise = sigma * numpy.eye((num_subspace - len(lost_space)) * subspace_size)
-#
-#     proj_combi = numpy.concatenate([proj for k, proj in enumerate(op) if k not in lost_space], axis=1)
-#     m_matrix = reduce(numpy.dot, [proj_combi.T, r_yy, proj_combi]) + noise
-#     m_inv = numpy.linalg.inv(m_matrix)
-#     left_mult = reduce(numpy.dot, [psi, r_yy, proj_combi, m_inv])
-#
-#     for packet in iterable:
-#         z_vec = map(lambda a: numpy.dot(a, packet) + white_noise(subspace_size, sigma), mod_op)
-#
-#         z_combi = reduce(lambda a, b: a + b, [list(z) for l, z in enumerate(z_vec) if l not in lost_space])
-#         z_combi = numpy.array(map(lambda a: a[0, 0], z_combi))
-#
-#         x_hat = numpy.dot(left_mult, z_combi)
-#         yield map(lambda x: band_filter(x, -1, 1), x_hat)
