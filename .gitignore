@@ -1,9 +1,13 @@
-# Ignore compiled python files
-**/*.pyc
+# Ignore everything in root
+/*
 
-# Ignore everything in root, except for several files
-*
-!.gitignore
-!README.md
-!aggregate_example.py
+# Except for .py files in the package,
+!/holographic/**/*.py
+# image files,
+!/img/
+# and some files in root
 !single_example.py
+!aggregate_example.py
+!plot_analysis.py
+!README.md
+!.gitignore
