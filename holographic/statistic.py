@@ -8,9 +8,10 @@ def calculate_statistic(block_size, handler_class, *args, **kwargs):
     ctr = 0
     for fn in args:
         data = handler_class(fn, block_size, 'r', **kwargs)
-        for block in data():
-            rxx += numpy.outer(block, block)
-            ctr += 1
+        for blocks in data():
+            for block in blocks:
+                rxx += numpy.outer([block], [block])
+                ctr += 1
     rxx /= ctr
     lamda, psi = numpy.linalg.eig(rxx)
 

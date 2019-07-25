@@ -96,7 +96,9 @@ def partition(iterable, size, random_mode=False):
 
 
 def simulate(iterable, psi, lamda, partitions, big_m, small_m, big_n, sigma, ell=1, lost_space=None):
-    """Yield vectors from simulated recovery. Data are assumed to be between -1 and 1, centered at 0."""
+    """Yield vectors from simulated recovery. Data are assumed to be between -1 and 1, centered at 0.
+
+    The input vectors are supplied as well."""
     op = [to_operator(a, big_m) for a in partitions]
     mod_op = [numpy.matmul(a.T, psi.T) for a in op]
     r_yy = numpy.diag(lamda)
@@ -111,11 +113,15 @@ def simulate(iterable, psi, lamda, partitions, big_m, small_m, big_n, sigma, ell
     m_inv = numpy.linalg.inv(m_matrix)
     left_mult = reduce(numpy.matmul, [psi, r_yy, proj_combi, m_inv])
 
-    for packet in iterable:
-        z_vec = [numpy.matmul(packet, a.T).T + white_noise(subspace_size, sigma) for a in mod_op]
+    for packets in iterable:
+        yield_val = []
+        for packet in packets:
+            z_vec = [numpy.matmul([packet], a.T).T + white_noise(subspace_size, sigma) for a in mod_op]
 
-        z_combi = reduce(lambda a, b: a + b, [list(z) for l, z in enumerate(z_vec) if l not in lost_space])
-        z_combi = numpy.array([a[0] for a in z_combi])
+            z_combi = reduce(lambda a, b: a + b, [list(z) for l, z in enumerate(z_vec) if l not in lost_space])
+            z_combi = numpy.array([a[0] for a in z_combi])
 
-        x_hat = numpy.matmul(left_mult, z_combi)
-        yield map(lambda x: band_filter(x, -1, 1), x_hat)
+            x_hat = numpy.matmul(left_mult, z_combi)
+            yield_val.append(map(lambda x: band_filter(x, -1, 1), x_hat))
+
+        yield packets, yield_val
