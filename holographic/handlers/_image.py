@@ -8,6 +8,7 @@ class ImageHandler(object):
     """Handle image file read and write."""
     def __init__(self, fn, block_size, mode='r', color_mode='L'):
         self._mode = mode.lower()
+        self._color_mode = color_mode
         self._block_size = block_size
         self._block_width = int((block_size + 1)**0.5)  # dirty way to check for squareness
         self._average = None
@@ -55,58 +56,48 @@ class ImageHandler(object):
 
         pixels = [numpy.array(list(self._f.getdata(band=x))) for x in xrange(self._num_bands)]
         for i, p in enumerate(pixels):
-            p.shape = (self._height, self._width)
-            pixels[i] = numpy.pad(p, ((0, bottom_pad), (0, right_pad)), 'edge') / 128.0 - 1
+            p.shape = self._width, self._height
+            pixels[i] = numpy.pad(p, ((0, right_pad), (0, bottom_pad)), 'edge') / 128.0 - 1
 
         self._average = numpy.zeros((1, self._block_size))
-        for i, j in [(x, y) for x in xrange(lr_blocks) for y in xrange(ud_blocks)]:
+        for i, j in [(x, y) for x in xrange(ud_blocks) for y in xrange(lr_blocks)]:
             for p in pixels:
                 self._average += p[j*self._block_width:(j+1)*self._block_width, i*self._block_width:(i+1)*self._block_width].flatten()
         self._average /= lr_blocks * ud_blocks
-        for i, j in [(x, y) for x in xrange(lr_blocks) for y in xrange(ud_blocks)]:
+        for i, j in [(x, y) for x in xrange(ud_blocks) for y in xrange(lr_blocks)]:
             yield [list(p[j*self._block_width:(j+1)*self._block_width, i*self._block_width:(i+1)*self._block_width].flatten()) for p in pixels]
         self._f.close()
 
     def _write_func(self, *args):
         lr_blocks = self._lr_blocks
         ud_blocks = self._ud_blocks
-        bottom_pad = self._bottom_pad
-        right_pad = self._right_pad
 
-        # for writing, set params first before calling
-        pixels = [band_filter(128*(y + 1), 0, 255) for x in args for y in x]
-        pixels = numpy.array(pixels, dtype='uint8')
+        # provide multiple arguments to write all of them in one go
+        for arg in args:
+            # for writing, set params first before calling
+            pixels = reduce(lambda a, b: a + b, zip(*arg))
+            pixels = [band_filter(128*(x + 1), 0, 255) for x in pixels]
+            pixels = numpy.array(pixels, dtype='uint8')
 
-        if self._num_bands == 1:
-            pixels.shape = self._block_width, self._block_width
-        else:
-            pixels.shape = self._block_width, self._block_width, self._num_bands
+            if self._num_bands == 1:
+                pixels.shape = self._block_width, self._block_width
+            else:
+                pixels.shape = self._block_width, self._block_width, self._num_bands
 
-        patch_size = self._block_width, self._block_width
-        if self._y == ud_blocks - 1:
-            patch_size = self._block_width - bottom_pad, patch_size[1]
-        if self._x == lr_blocks - 1:
-            patch_size = patch_size[0], self._block_width - right_pad
-
-        if self._num_bands == 1:
-            pixels = pixels[:patch_size[0], :patch_size[1]]
-        else:
-            pixels = pixels[:patch_size[0], :patch_size[1], :]
-
-        patch = Image.fromarray(pixels)
-        self._f.paste(patch, (self._x*self._block_width, self._y*self._block_width))
-        patch.close()
-        self._y += 1
-        if self._y >= ud_blocks:
-            self._y = 0
-            self._x += 1
+            patch = Image.fromarray(pixels)
+            self._f.paste(patch, (self._x*self._block_width, self._y*self._block_width))
+            patch.close()
+            self._y += 1
+            if self._y >= ud_blocks:
+                self._y = 0
+                self._x += 1
 
     def params(self, *args):
         if self._mode == 'r':
             return self._height, self._width
         elif self._mode == 'w':
-            self._height = args[0]
-            self._width = args[1]
+            self._width = args[0]
+            self._height = args[1]
             self._f = self._f.resize(args)
 
     def close(self):
@@ -118,6 +109,10 @@ class ImageHandler(object):
     @property
     def mode(self):
         return self._mode
+
+    @property
+    def color_mode(self):
+        return self._color_mode
 
     @property
     def average(self):
