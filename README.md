@@ -8,4 +8,4 @@ These algorithms were based on and used to obtain simulated results in the follo
 
 These scripts require `Python 2.7` with the packages `numpy` and `PIL`.
 
-Examples of its usage can be found in `example.py`.
+Examples of its usage can be found in the included Python scripts.
