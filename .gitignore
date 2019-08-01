@@ -5,9 +5,12 @@
 !/holographic/**/*.py
 # image files,
 !/img/
+# analysis data files,
+!/plot_data/
 # and some files in root
 !single_example.py
 !aggregate_example.py
+!analysis_data_pts.py
 !plot_analysis.py
 !README.md
 !.gitignore
