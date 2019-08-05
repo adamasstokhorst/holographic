@@ -23,7 +23,7 @@ for i, fn in enumerate(fns):
 axes.grid(True, linestyle='dotted')
 axes.set_ylabel('(Log) Mean squared error', fontsize=24)
 axes.set_xlabel(r'$\ell$', fontsize=24)
-axes.set_title('Aggregate MSE plots for various images')
+axes.set_title('Aggregate MSE plots for various images', fontsize=32)
 axes.legend()
 pyplot.savefig('aggregate_mse_plot.png')
 pyplot.show()
