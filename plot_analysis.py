@@ -17,7 +17,7 @@ for i, fn in enumerate(fns):
     with open(fn, 'rb') as f:
         data = pickle.load(f)
 
-    color = pyplot.cm.get_cmap('hsv', len(fns))(i)
+    color = pyplot.cm.get_cmap('brg', len(fns))(i)
     axes.semilogy(data['x'], data['y'], label=data['label'], color=color, linestyle='-')
 
 axes.grid(True, linestyle='dotted')
