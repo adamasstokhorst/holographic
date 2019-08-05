@@ -15,7 +15,7 @@ def ncr(n, r):
 
 
 # list of filepaths
-fnames = ['img/lena.jpg']
+fnames = ['img/lena.jpg', 'img/pingu.jpg']
 # number of combinations to sample
 upper_limit = 50
 handler = hl.ImageHandler
@@ -54,6 +54,6 @@ for fname in fnames:
         y_points.append(total_mse)
 
     with open('plot_data/' + fname.split('/')[-1], 'wb') as f:
-        pickle.dump(f, {'x': x_points,
-                        'y': y_points,
-                        'label': fname.split('/')[-1]})
+        pickle.dump({'x': x_points,
+                     'y': y_points,
+                     'label': fname.split('/')[-1]}, f)
