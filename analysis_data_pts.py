@@ -24,6 +24,7 @@ with open('aggregate_statistics', 'r') as f:
     d = pickle.load(f)
 
 for fname in fnames:
+    print 'Processing {}...'.format(fname)
     x_points = []
     y_points = []
     for ell in range(1, d['big_n'] + 1):
