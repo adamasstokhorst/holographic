@@ -14,7 +14,7 @@ image_in = hl.ImageHandler('img/' + fn, big_m, mode='r', color_mode='L')
 image_out = hl.ImageHandler('out_' + fn, big_m, mode='w', color_mode='L')
 image_out.params(*image_in.params())
 
-for _, packet in hl.helpers.simulate(image_in(), psi, lamda, partitions, big_m, small_m, big_n, sigma, ell=4):
+for _, packet in hl.helpers.simulate(image_in(), psi, lamda, partitions, big_m, small_m, big_n, sigma, ell=2):
     image_out(packet)
 
 image_out.close()
