@@ -104,18 +104,20 @@ def simulate(iterable, psi, lamda, partitions, big_m, small_m, big_n, sigma, ell
     r_yy = numpy.diag(lamda)
     subspace_size, num_subspace = small_m, big_n
 
-    if not lost_space:
-        lost_space = random.sample(range(num_subspace), num_subspace - ell)
-    noise = sigma * numpy.eye((num_subspace - len(lost_space)) * subspace_size)
-
-    proj_combi = numpy.concatenate([proj for k, proj in enumerate(op) if k not in lost_space], axis=1)
-    m_matrix = reduce(numpy.matmul, [proj_combi.T, r_yy, proj_combi]) + noise
-    m_inv = numpy.linalg.inv(m_matrix)
-    left_mult = reduce(numpy.matmul, [psi, r_yy, proj_combi, m_inv])
-
     for packets in iterable:
         yield_val = []
         for packet in packets:
+            # this part might add a lot of time due to matrix inversion
+            # adding the white noise really gets in the way of being able to memo this
+            if not lost_space:
+                lost_space = random.sample(range(num_subspace), num_subspace - ell)
+            noise = sigma * numpy.eye((num_subspace - len(lost_space)) * subspace_size)
+            
+            proj_combi = numpy.concatenate([proj for k, proj in enumerate(op) if k not in lost_space], axis=1)
+            m_matrix = reduce(numpy.matmul, [proj_combi.T, r_yy, proj_combi]) + noise
+            m_inv = numpy.linalg.inv(m_matrix)
+            left_mult = reduce(numpy.matmul, [psi, r_yy, proj_combi, m_inv])
+            
             z_vec = [numpy.matmul([packet], a.T).T + white_noise(subspace_size, sigma) for a in mod_op]
 
             z_combi = reduce(lambda a, b: a + b, [list(z) for l, z in enumerate(z_vec) if l not in lost_space])
