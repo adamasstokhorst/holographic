@@ -5,7 +5,7 @@ import holographic as hl
 big_m = 64
 small_m = 8
 big_n = 8
-sigma = 0.02
+sigma = 0.01
 folder = 'img/'
 
 fn = []
