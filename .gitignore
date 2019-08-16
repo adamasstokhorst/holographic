@@ -12,5 +12,6 @@
 !aggregate_example.py
 !analysis_data_pts.py
 !plot_analysis.py
+!plot_lambdas.py
 !README.md
 !.gitignore
