@@ -15,19 +15,20 @@ def ncr(n, r):
 
 
 # list of filepaths
-fnames = ['img/bus.jpg', 'img/painter.jpeg']
+fnames = ['img/baboon.png', 'img/lena.jpg', 'img/flood.jpg', 'img/pingu.jpg']
 # number of combinations to sample
-upper_limit = 50
+upper_limit = 20
 handler = hl.ImageHandler
 
 with open('aggregate_statistics', 'r') as f:
     d = pickle.load(f)
 
 for fname in fnames:
-    print 'Processing {}...'.format(fname)
+    print 'Processing {}...'.format(fname),
     x_points = []
     y_points = []
     for ell in range(1, d['big_n'] + 1):
+        print ell,
         d['ell'] = ell
 
         # if ncr(d['big_n'], ell) <= upper_limit:
@@ -57,3 +58,5 @@ for fname in fnames:
         pickle.dump({'x': x_points,
                      'y': y_points,
                      'label': fname.split('/')[-1]}, f)
+
+    print
