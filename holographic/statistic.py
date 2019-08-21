@@ -1,5 +1,4 @@
 import numpy
-from .helpers import euc_norm, variance
 
 
 def calculate_statistic(block_size, handler_class, *args, **kwargs):
@@ -25,7 +24,7 @@ def calculate_statistic(block_size, handler_class, *args, **kwargs):
     return lamda, psi
 
 
-def get_min_entries(big_m, big_n, small_m, vars, l_set):
+def get_min_entries(big_m, big_n, small_m, vari, l_set):
     """Calculate the distribution of subspaces for the greatest MSE reduction."""
     # size-check
     l_set = l_set[:big_m]
@@ -39,7 +38,7 @@ def get_min_entries(big_m, big_n, small_m, vars, l_set):
     harmonic_average = sum(harmonic_lambda) / big_m
 
     # calculate zeta_j first to find if any is negative
-    zeta_j = [addend - (vars * (1.0/x - harmonic_average)) for x in l_set]
+    zeta_j = [addend - (vari * (1.0 / x - harmonic_average)) for x in l_set]
 
     is_found = True
     try:
@@ -57,9 +56,9 @@ def get_min_entries(big_m, big_n, small_m, vars, l_set):
         while is_found:
             # index is t in the paper
             index = int((begin + end) / 2)
-            sqrt_beta_t = index * vars**.5 / (
-                    big_n * small_m + vars * sum(harmonic_lambda[:index]))
-            zeta_j = [vars**.5 / sqrt_beta_t - vars / x for x in l_set]
+            sqrt_beta_t = index * vari ** .5 / (
+                    big_n * small_m + vari * sum(harmonic_lambda[:index]))
+            zeta_j = [vari ** .5 / sqrt_beta_t - vari / x for x in l_set]
             # zeta_j index starts from 0 instead, this cancels out with the + 1 term
             for i in range(index, big_m):
                 zeta_j[i] = 0
@@ -80,9 +79,9 @@ def get_min_entries(big_m, big_n, small_m, vars, l_set):
                     # use the value at index - 1 instead, not the current index (since it has negative zeta_j)
                     is_found = False
                     index -= 1
-                    sqrt_beta_t = index * vars**.5 / (
-                            big_n * small_m + vars * sum(harmonic_lambda[:index]))
-                    zeta_j = [vars**.5 / sqrt_beta_t - vars / x for x in l_set]
+                    sqrt_beta_t = index * vari ** .5 / (
+                            big_n * small_m + vari * sum(harmonic_lambda[:index]))
+                    zeta_j = [vari ** .5 / sqrt_beta_t - vari / x for x in l_set]
                     for i in range(index, big_m):
                         zeta_j[i] = 0
                 else:
