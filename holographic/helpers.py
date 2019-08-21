@@ -95,7 +95,7 @@ def partition(iterable, size, random_mode=False):
                 yield sorted(result)
 
 
-def simulate(iterable, psi, lamda, partitions, big_m, small_m, big_n, sigma, ell=1, lost_space=None):
+def simulate(iterable, psi, lamda, partitions, big_m, small_m, big_n, sigma, ell=1):
     """Yield vectors from simulated recovery. Data are assumed to be between -1 and 1, centered at 0.
 
     The input vectors are supplied as well."""
@@ -109,9 +109,8 @@ def simulate(iterable, psi, lamda, partitions, big_m, small_m, big_n, sigma, ell
         for packet in packets:
             # this part might add a lot of time due to matrix inversion
             # adding the white noise really gets in the way of being able to memo this
-            if not lost_space:
-                lost_space = random.sample(range(num_subspace), num_subspace - ell)
-            noise = sigma * numpy.eye((num_subspace - len(lost_space)) * subspace_size)
+            lost_space = random.sample(range(num_subspace), num_subspace - ell)
+            noise = sigma * numpy.eye(ell * subspace_size)
             
             proj_combi = numpy.concatenate([proj for k, proj in enumerate(op) if k not in lost_space], axis=1)
             m_matrix = reduce(numpy.matmul, [proj_combi.T, r_yy, proj_combi]) + noise

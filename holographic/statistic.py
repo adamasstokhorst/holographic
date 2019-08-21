@@ -1,12 +1,9 @@
 import numpy
-from .helpers import euc_norm, variance, partition
+from .helpers import euc_norm, variance
 
 
 def calculate_statistic(block_size, handler_class, *args, **kwargs):
     """Reads data from given filenames."""
-    if not args:
-        raise TypeError('No filename given.')
-
     rxx = numpy.zeros((block_size, block_size))
     ctr = 0
     for fn in args:
@@ -140,48 +137,22 @@ def zeta(big_n, mul, l_set, var, memo_dict):
         return memo_dict[param]
 
 
-def calculate_partition(space_size, num_subspace, subspace_size, sigma, lamda, erasure_clip=None, partition_limit=30):
-    """Randomly finds a partition that allows for a smooth recovery."""
-    import collections
-    import itertools
-
+def calculate_partition(space_size, num_subspace, subspace_size, sigma, lamda):
+    """Finds a partition that allows for a smooth recovery."""
     # Given the eigenvalues, find the combination of spaces that yields the best MSE reduction.
-    baseline = sum(lamda)
     exact_entries = get_min_entries(space_size, num_subspace, subspace_size, sigma, lamda)
 
-    memo = {}
-    picks = reduce(lambda x, y: x + y, [[i+1] * j for i, j in enumerate(exact_entries) if j != 0])
-    ctr = collections.Counter()
-    ctr.update(picks)
-    s_j = collections.Counter()
-    s_j.update(exact_entries)
-
     # Partition the spaces into subspaces.
-    partition_list = []
-    for parts in partition(picks, subspace_size, random_mode=True):
-        partition_list.append(parts)
-        if len(partition_list) >= partition_limit:
-            break
+    partition = [[0, i, list()] for i in range(num_subspace)]
+    for i, sense_count in enumerate(exact_entries):
+        ctr = 0
+        for k in range(num_subspace):
+            if len(partition[k][2]) < subspace_size:
+                partition[k][0] += lamda[i]
+                partition[k][2].append(i+1)
+                ctr += 1
+            if ctr == sense_count:
+                break
+        partition.sort()
 
-    # Calculate variance of these partitions to get the smoothest recovery.
-    all_variances = []
-    for n in range(1, num_subspace+1):
-        if n == erasure_clip:
-            break
-        all_variances.append(list())
-        for partitions in partition_list:
-            values = []
-            for subpartition in itertools.combinations(partitions, n):
-                subspace_counter = collections.Counter()
-                for space in subpartition:
-                    subspace_counter.update(space)
-                sum_p = sum([zeta(x, y, lamda, sigma, memo) for (x, y) in subspace_counter.most_common()])
-                values.append(baseline - sum_p)
-            all_variances[-1].append(variance(values))
-
-    output_values = []
-    for i, p in enumerate(partition_list):
-        p_var = [erasure_stat[i] for erasure_stat in all_variances]
-        output_values.append((p, euc_norm(p_var)))
-    output_values.sort(key=lambda x: x[1])
-    return output_values[0][0]
+    return sorted([x[2] for x in partition])
