@@ -15,9 +15,9 @@ def ncr(n, r):
 
 
 # list of filepaths
-fnames = ['img/baboon.png', 'img/lena.jpg', 'img/flood.jpg', 'img/pingu.jpg']
+fnames = ['img/saltharvest.jpg', 'img/greenfrog.jpg', 'img/raflesia.jpg', 'img/plane.jpg', 'img/snowbird.jpg']
 # number of combinations to sample
-upper_limit = 20
+upper_limit = 50
 handler = hl.ImageHandler
 
 with open('aggregate_statistics', 'r') as f:
