@@ -15,7 +15,7 @@ def ncr(n, r):
 
 
 # list of filepaths
-fnames = ['img/saltharvest.jpg', 'img/greenfrog.jpg', 'img/raflesia.jpg', 'img/plane.jpg', 'img/snowbird.jpg']
+fnames = ['img/baboon.png']
 # number of combinations to sample
 upper_limit = 50
 handler = hl.ImageHandler
@@ -28,7 +28,7 @@ for fname in fnames:
 
     # make a copy for image-specific statistics
     s = dict(d)
-    s['lamda'], s['psi'] = hl.statistic.calculate_statistic(d['big_m'], hl.ImageHandler, 'img/' + fname)
+    s['lamda'], s['psi'] = hl.statistic.calculate_statistic(d['big_m'], hl.ImageHandler, fname)
     s['partitions'] = hl.statistic.calculate_partition(d['big_m'], d['big_n'], d['small_m'], d['sigma'], s['lamda'])
 
     x_points = []
