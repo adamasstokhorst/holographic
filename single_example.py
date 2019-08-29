@@ -1,4 +1,5 @@
 import holographic as hl
+import pickle
 
 big_m = 64
 small_m = 8
@@ -7,10 +8,16 @@ sigma = 0.01
 
 fn = 'kerbau.jpg'
 
+# using image-specific statistics
 lamda, psi = hl.statistic.calculate_statistic(big_m, hl.ImageHandler, 'img/' + fn)
 partitions = hl.statistic.calculate_partition(big_m, big_n, small_m, sigma, lamda)
 
-for i in range(1, 9):
+# using aggregate statistics
+# with open('aggregate_statistics', 'r') as f:
+#     d = pickle.load(f)
+#     lamda, psi, partitions = d['lamda'], d['psi'], d['partitions']
+
+for i in range(1, big_n + 1):
     print i,
     image_in = hl.ImageHandler('img/' + fn, big_m, mode='r', color_mode='RGB')
     image_out = hl.ImageHandler('out_{}_{}'.format(i, fn), big_m, mode='w', color_mode='RGB')
