@@ -19,7 +19,7 @@ for i, fn in enumerate(fns):
 
     color = pyplot.cm.get_cmap('brg', len(fns))(i)
     axes.semilogy(data['x'], data['y'], label=data['label'], color=color, linestyle='-')
-    axes.semilogy(data['x'], data['y'], label=data['label'] + ' (sp)', color=color, linestyle='--')
+    axes.semilogy(data['x'], data['y2'], label=data['label'] + ' (sp)', color=color, linestyle='--')
 
 axes.grid(True, linestyle='dotted')
 axes.set_ylabel('(Log) Mean squared error', fontsize=24)
