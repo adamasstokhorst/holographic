@@ -1,12 +1,14 @@
 import holographic as hl
 import pickle
+import pprint
+import collections
 
 big_m = 64
 small_m = 8
-big_n = 8
-sigma = 0.01
+big_n = 16
+sigma = 4
 
-fn = 'kerbau.jpg'
+fn = 'dragon.png'
 use_im_stats = True
 
 if use_im_stats:
@@ -19,7 +21,13 @@ else:
         d = pickle.load(f)
         lamda, psi, partitions = d['lamda'], d['psi'], d['partitions']
 
+c = collections.Counter()
+c.update([a for p in partitions for a in p])
+print(c.most_common())
+pprint.pprint(lamda)
+
 for i in range(1, big_n + 1):
+#    break
     print i,
     image_in = hl.ImageHandler('img/' + fn, big_m, mode='r', color_mode='RGB')
     image_out = hl.ImageHandler('out_{}_{}'.format(i, fn), big_m, mode='w', color_mode='RGB')
