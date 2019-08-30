@@ -104,7 +104,7 @@ def simulate(iterable, psi, lamda, partitions, big_m, small_m, big_n, sigma, ell
     r_yy = numpy.diag(lamda)
     subspace_size, num_subspace = small_m, big_n
 
-    if not lost_space:
+    if lost_space is None:
         lost_space = random.sample(range(num_subspace), num_subspace - ell)
     noise = sigma * numpy.eye((num_subspace - len(lost_space)) * subspace_size)
 
