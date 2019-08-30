@@ -4,11 +4,12 @@
 # Except for .py files in the package,
 !/holographic/**/*.py
 # image files,
-!/img/
+!/img/*
 # analysis data files,
-!/plot_data/
+!/plot_data/*
 # and some files in root
 !single_example.py
+!single_image_buildup.py
 !aggregate_example.py
 !analysis_data_pts.py
 !plot_analysis.py
