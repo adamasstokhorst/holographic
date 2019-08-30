@@ -61,6 +61,7 @@ for fname in fnames:
                 ctr += 1
 
         total_mse /= ctr
+        total_mse_s /= ctr
         x_points.append(ell)
         y_points.append(total_mse)
         y_points_s.append(total_mse_s)
