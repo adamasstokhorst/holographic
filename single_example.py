@@ -6,9 +6,9 @@ import collections
 big_m = 64
 small_m = 8
 big_n = 16
-sigma = 4
+sigma = 0.25
 
-fn = 'dragon.png'
+fn = 'lake.jpeg'
 use_im_stats = True
 
 if use_im_stats:
@@ -24,13 +24,13 @@ else:
 c = collections.Counter()
 c.update([a for p in partitions for a in p])
 print(c.most_common())
-pprint.pprint(lamda)
+# pprint.pprint(lamda)
 
 for i in range(1, big_n + 1):
-#    break
+    break
     print i,
     image_in = hl.ImageHandler('img/' + fn, big_m, mode='r', color_mode='RGB')
-    image_out = hl.ImageHandler('out_{}_{}'.format(i, fn), big_m, mode='w', color_mode='RGB')
+    image_out = hl.ImageHandler('true_out_{}_{}'.format(i, fn), big_m, mode='w', color_mode='RGB')
     image_out.params(*image_in.params())
 
     for _, packet in hl.helpers.simulate(image_in(), psi, lamda, partitions, big_m, small_m, big_n, sigma, ell=i):

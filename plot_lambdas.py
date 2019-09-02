@@ -3,9 +3,9 @@ import holographic as hl
 from matplotlib import pyplot
 
 big_m = 64
-small_m = 8
-big_n = 8
-sigma = 0.01
+# small_m = 8
+# big_n = 8
+# sigma = 0.01
 folder = 'img/'
 
 fns = []
@@ -32,5 +32,5 @@ axes.set_ylabel('(Log) Lambda values', fontsize=24)
 axes.set_xlabel(r'$i$', fontsize=24)
 axes.set_title('Lambda plots for various images', fontsize=32)
 axes.legend(fontsize=8, ncol=5)
-pyplot.savefig('aggregate_lambda_plot.png')
+pyplot.savefig('aggregate_lambda_plot_M64.png')
 pyplot.show()
