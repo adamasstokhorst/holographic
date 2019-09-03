@@ -6,9 +6,9 @@ import collections
 big_m = 64
 small_m = 8
 big_n = 16
-sigma = 0.25
+sigma = 0.09
 
-fn = 'lake.jpeg'
+fn = 'dragon.png'
 use_im_stats = True
 
 if use_im_stats:
@@ -24,7 +24,7 @@ else:
 c = collections.Counter()
 c.update([a for p in partitions for a in p])
 print(c.most_common())
-# pprint.pprint(lamda)
+pprint.pprint(lamda)
 
 for i in range(1, big_n + 1):
     break
