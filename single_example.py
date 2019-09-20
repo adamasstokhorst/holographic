@@ -14,7 +14,8 @@ use_im_stats = True
 if use_im_stats:
     # using image-specific statistics
     lamda, psi = hl.statistic.calculate_statistic(big_m, hl.ImageHandler, 'img/' + fn)
-    partitions = hl.statistic.calculate_partition(big_m, big_n, small_m, sigma, lamda)
+    partitions = hl.statistic.calculate_partition(big_m, big_n, small_m, sigma, lamda, mode=1)
+    print partitions
 else:
     # using aggregate statistics
     with open('aggregate_statistics', 'r') as f:
@@ -27,7 +28,6 @@ print(c.most_common())
 pprint.pprint(lamda)
 
 for i in range(1, big_n + 1):
-    break
     print i,
     image_in = hl.ImageHandler('img/' + fn, big_m, mode='r', color_mode='RGB')
     image_out = hl.ImageHandler('true_out_{}_{}'.format(i, fn), big_m, mode='w', color_mode='RGB')
