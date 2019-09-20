@@ -5,8 +5,8 @@ import collections
 
 big_m = 64
 small_m = 8
-big_n = 16
-sigma = 0.09
+big_n = 8
+sigma = 0.01
 
 fn = 'dragon.png'
 use_im_stats = True

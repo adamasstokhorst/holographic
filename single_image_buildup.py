@@ -13,8 +13,8 @@ use_im_stats = False
 if use_im_stats:
     # using image-specific statistics
     lamda, psi = hl.statistic.calculate_statistic(big_m, hl.ImageHandler, 'img/' + fn)
-    partitions = hl.statistic.calculate_partition(big_m, big_n, small_m, sigma, lamda)
-else:
+    partitions = hl.statistic.calculate_partition(big_m, big_n, small_m, sigma, lamda, mode=1)
+    print partitionselse:
     # using aggregate statistics
     with open('aggregate_statistics', 'r') as f:
         d = pickle.load(f)
