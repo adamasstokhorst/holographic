@@ -20,7 +20,7 @@ else:
         d = pickle.load(f)
         lamda, psi, partitions = d['lamda'], d['psi'], d['partitions']
 
-sp = random.sample(range(big_n), big_n)
+sp = range(big_n)
 for i in xrange(1, big_n + 1):
     print i,
     image_in = hl.ImageHandler('img/' + fn, big_m, mode='r', color_mode='RGB')
