@@ -24,6 +24,69 @@ def calculate_statistic(block_size, handler_class, *args, **kwargs):
     return lamda, psi
 
 
+def calculate_zetas(big_m, big_n, small_m, vari, l_set):
+    # N * m / M
+    addend = 1.0 * big_n * small_m / big_m
+    # 1/M \sum_{k=1}^M 1/\lambda_k
+    harmonic_lambda = [1.0/x for x in l_set]
+    harmonic_average = sum(harmonic_lambda) / big_m
+
+    # calculate zeta_j first to find if any is negative
+    zeta_j = [addend - (vari * (1.0 / x - harmonic_average)) for x in l_set]
+
+    is_found = True
+    try:
+        index = [x > 0 for x in zeta_j].index(False)
+    except ValueError:
+        is_found = False
+        index = None
+
+    if is_found:
+        # first entry will always be 0, its only for index padding
+        sign_array = [0] * big_m
+
+        begin = 1
+        end = big_m - 1
+        while is_found:
+            # index is t in the paper
+            index = int((begin + end) / 2)
+            sqrt_beta_t = index * vari ** .5 / (
+                    big_n * small_m + vari * sum(harmonic_lambda[:index]))
+            zeta_j = [vari ** .5 / sqrt_beta_t - vari / x for x in l_set]
+            # zeta_j index starts from 0 instead, this cancels out with the + 1 term
+            for i in range(index, big_m):
+                zeta_j[i] = 0
+
+            try:
+                _ = [x >= 0 for x in zeta_j].index(False)
+                sign_array[index] = -1
+            except ValueError:
+                sign_array[index] = 1
+
+            if sign_array[index] == 1:
+                if index == big_m-1 or sign_array[index+1] == -1:
+                    is_found = False
+                else:
+                    begin = index + 1
+            else:
+                if sign_array[index-1] == 1:
+                    # use the value at index - 1 instead, not the current index (since it has negative zeta_j)
+                    is_found = False
+                    index -= 1
+                    sqrt_beta_t = index * vari ** .5 / (
+                            big_n * small_m + vari * sum(harmonic_lambda[:index]))
+                    zeta_j = [vari ** .5 / sqrt_beta_t - vari / x for x in l_set]
+                    for i in range(index, big_m):
+                        zeta_j[i] = 0
+                else:
+                    end = index - 1
+
+    if index is None:
+        index = big_m - 1
+
+    return zeta_j, index
+
+
 def get_min_entries(big_m, big_n, small_m, vari, l_set, mode):
     """Calculate the distribution of subspaces for the greatest MSE reduction."""
     # size-check
@@ -32,64 +95,8 @@ def get_min_entries(big_m, big_n, small_m, vari, l_set, mode):
         raise ValueError('lambda set shorter than space size')
 
     if mode == 1:
-        # N * m / M
-        addend = 1.0 * big_n * small_m / big_m
-        # 1/M \sum_{k=1}^M 1/\lambda_k
-        harmonic_lambda = [1.0/x for x in l_set]
-        harmonic_average = sum(harmonic_lambda) / big_m
-
-        # calculate zeta_j first to find if any is negative
-        zeta_j = [addend - (vari * (1.0 / x - harmonic_average)) for x in l_set]
-
-        is_found = True
-        try:
-            index = [x > 0 for x in zeta_j].index(False)
-        except ValueError:
-            is_found = False
-            index = None
-
-        if is_found:
-            # first entry will always be 0, its only for index padding
-            sign_array = [0] * big_m
-
-            begin = 1
-            end = big_m - 1
-            while is_found:
-                # index is t in the paper
-                index = int((begin + end) / 2)
-                sqrt_beta_t = index * vari ** .5 / (
-                        big_n * small_m + vari * sum(harmonic_lambda[:index]))
-                zeta_j = [vari ** .5 / sqrt_beta_t - vari / x for x in l_set]
-                # zeta_j index starts from 0 instead, this cancels out with the + 1 term
-                for i in range(index, big_m):
-                    zeta_j[i] = 0
-
-                try:
-                    _ = [x >= 0 for x in zeta_j].index(False)
-                    sign_array[index] = -1
-                except ValueError:
-                    sign_array[index] = 1
-
-                if sign_array[index] == 1:
-                    if index == big_m-1 or sign_array[index+1] == -1:
-                        is_found = False
-                    else:
-                        begin = index + 1
-                else:
-                    if sign_array[index-1] == 1:
-                        # use the value at index - 1 instead, not the current index (since it has negative zeta_j)
-                        is_found = False
-                        index -= 1
-                        sqrt_beta_t = index * vari ** .5 / (
-                                big_n * small_m + vari * sum(harmonic_lambda[:index]))
-                        zeta_j = [vari ** .5 / sqrt_beta_t - vari / x for x in l_set]
-                        for i in range(index, big_m):
-                            zeta_j[i] = 0
-                    else:
-                        end = index - 1
-
-        if index is None:
-            index = big_m - 1
+        zeta_j, index = calculate_zetas(big_m, big_n, small_m, vari, l_set)
+        print zeta_j
 
         # do initial rounding
         output = map(lambda x: int(round(x)), zeta_j)
@@ -126,61 +133,8 @@ def get_min_entries(big_m, big_n, small_m, vari, l_set, mode):
 
         return output
     elif mode == 2:
-        # N * m / M
-        addend = 1.0 * big_n * small_m / big_m
-        # 1/M \sum_{k=1}^M 1/\lambda_k
-        harmonic_lambda = [1.0/x for x in l_set]
-        harmonic_average = sum(harmonic_lambda) / big_m
-
-        # calculate zeta_j first to find if any is negative
-        zeta_j = [addend - (vari * (1.0 / x - harmonic_average)) for x in l_set]
-
-        is_found = True
-        try:
-            index = [x > 0 for x in zeta_j].index(False)
-        except ValueError:
-            is_found = False
-            index = None
-
-        if is_found:
-            # first entry will always be 0, its only for index padding
-            sign_array = [0] * big_m
-
-            begin = 1
-            end = big_m - 1
-            while is_found:
-                # index is t in the paper
-                index = int((begin + end) / 2)
-                sqrt_beta_t = index * vari ** .5 / (
-                        big_n * small_m + vari * sum(harmonic_lambda[:index]))
-                zeta_j = [vari ** .5 / sqrt_beta_t - vari / x for x in l_set]
-                # zeta_j index starts from 0 instead, this cancels out with the + 1 term
-                for i in range(index, big_m):
-                    zeta_j[i] = 0
-
-                try:
-                    _ = [x >= 0 for x in zeta_j].index(False)
-                    sign_array[index] = -1
-                except ValueError:
-                    sign_array[index] = 1
-
-                if sign_array[index] == 1:
-                    if index == big_m-1 or sign_array[index+1] == -1:
-                        is_found = False
-                    else:
-                        begin = index + 1
-                else:
-                    if sign_array[index-1] == 1:
-                        # use the value at index - 1 instead, not the current index (since it has negative zeta_j)
-                        is_found = False
-                        index -= 1
-                        sqrt_beta_t = index * vari ** .5 / (
-                                big_n * small_m + vari * sum(harmonic_lambda[:index]))
-                        zeta_j = [vari ** .5 / sqrt_beta_t - vari / x for x in l_set]
-                        for i in range(index, big_m):
-                            zeta_j[i] = 0
-                    else:
-                        end = index - 1
+        zeta_j, _ = calculate_zetas(big_m, big_n, small_m, vari, l_set)
+        print zeta_j
 
         output = [int(z) for z in zeta_j]
         remainder = big_n * small_m - sum(output)
