@@ -3,9 +3,9 @@ import pickle
 import holographic as hl
 
 big_m = 64
-small_m = 8
+small_m = 4
 big_n = 8
-sigma = 0.25
+sigma = 0.01
 folder = 'img/'
 
 fn = []
