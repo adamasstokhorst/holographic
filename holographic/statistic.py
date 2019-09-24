@@ -131,6 +131,19 @@ def get_min_entries(big_m, big_n, small_m, vari, l_set, mode):
                 total += 1
                 output[pos] += 1
 
+        overflow = sum([max(0, a - big_n) for a in output])
+        if overflow:
+            for i in xrange(len(output)):
+                if output[i] >= big_n:
+                    output[i] = big_n
+                else:
+                    if overflow and output[i] < big_n:
+                        if overflow >= big_n - output[i]:
+                            overflow -= big_n - output[i]
+                            output[i] = big_n
+                        else:
+                            output[i] += overflow
+                            overflow = 0
         return output
     elif mode == 2:
         zeta_j, _ = calculate_zetas(big_m, big_n, small_m, vari, l_set)
@@ -148,6 +161,20 @@ def get_min_entries(big_m, big_n, small_m, vari, l_set, mode):
                     output[index] += remainder
                     remainder = 0
             index += 1
+
+        overflow = sum([max(0, a - big_n) for a in output])
+        if overflow:
+            for i in xrange(len(output)):
+                if output[i] >= big_n:
+                    output[i] = big_n
+                else:
+                    if overflow and output[i] < big_n:
+                        if overflow >= big_n - output[i]:
+                            overflow -= big_n - output[i]
+                            output[i] = big_n
+                        else:
+                            output[i] += overflow
+                            overflow = 0
         return output
     elif mode == 3:
         return [big_n] * small_m + [0] * (big_m - big_n)
