@@ -96,7 +96,6 @@ def get_min_entries(big_m, big_n, small_m, vari, l_set, mode):
 
     if mode == 1:
         zeta_j, index = calculate_zetas(big_m, big_n, small_m, vari, l_set)
-        print zeta_j
 
         # do initial rounding
         output = map(lambda x: int(round(x)), zeta_j)
@@ -197,7 +196,6 @@ def calculate_partition(space_size, num_subspace, subspace_size, sigma, lamda, m
     """Finds a partition that allows for a smooth recovery."""
     # Given the eigenvalues, find the combination of spaces that yields the best MSE reduction.
     exact_entries = get_min_entries(space_size, num_subspace, subspace_size, sigma, lamda, mode)
-    print exact_entries
 
     # === OLD ALGORITHM ===
     # Partition the spaces into subspaces.
