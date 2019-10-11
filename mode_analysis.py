@@ -35,4 +35,6 @@ for ell in range(1, big_n+1):
         best_sum = sum_p if sum_p > best_sum else best_sum
     result.append(baseline - best_sum)
 
-print result
+fnc = image_fn.split('.')[0]
+with open('modeanalysis_{}_mode{}'.format('aggregate' if use_aggregate else fnc, mode), 'w') as f:
+    pickle.dump(result, f)
