@@ -146,7 +146,6 @@ def get_min_entries(big_m, big_n, small_m, vari, l_set, mode):
         return output
     elif mode == 2:
         zeta_j, _ = calculate_zetas(big_m, big_n, small_m, vari, l_set)
-        print zeta_j
 
         output = [int(z) for z in zeta_j]
         remainder = big_n * small_m - sum(output)
