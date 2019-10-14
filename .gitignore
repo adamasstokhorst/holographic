@@ -7,13 +7,8 @@
 !/img/*
 # analysis data files,
 !/plot_data/*
+# example scripts,
+!/scripts/*
 # and some files in root
-!single_example.py
-!single_image_buildup.py
-!aggregate_example.py
-!analysis_data_pts.py
-!plot_analysis.py
-!plot_lambdas.py
-!mode_analysis.py
 !README.md
 !.gitignore
