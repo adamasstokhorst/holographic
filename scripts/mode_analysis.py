@@ -37,4 +37,7 @@ for ell in range(1, big_n+1):
 
 fnc = image_fn.split('.')[0]
 with open('modeanalysis_{}_mode{}'.format('aggregate' if use_aggregate else fnc, mode), 'w') as f:
-    pickle.dump(result, f)
+    pickle.dump({'x': range(1, big_n+1),
+                 'y': result,
+                 'label': 'aggregate' if use_aggregate else fnc,
+                 'mode': mode}, f)
