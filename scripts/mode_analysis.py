@@ -8,9 +8,9 @@ small_m = 8
 big_n = 8
 sigma = 0.01
 
-use_aggregate = True
-image_fn = ''
-mode = 1
+use_aggregate = False
+image_fn = 'dragon.png'
+mode = 3
 
 if use_aggregate:
     with open('aggregate_statistics', 'r') as f:
