@@ -30,23 +30,13 @@ for fn in fns:
     
     for d in data:
         mode = d['mode']
-        label = '{} (mode {})'.format(name, mode)
+        if mode <= 3:
+            label = '{} (mode {})'.format(name, mode)
+        else:
+            label = '{} (thr. best)'.format(name)
         linestyle = '-.' if mode == 1 else '--' if mode == 2 else ':' if mode == 3 else '-'
         
         axes.plot(d['x'], d['y'], label=label, color=color, linestyle=linestyle)
-
-# add theoretical best possible MSE reduction
-big_m, big_n, small_m, sigma = param['big_m'], param['big_n'], param['small_m'], param['sigma']
-result = []
-with open('aggregate_statistics', 'r') as f:
-    d = pickle.load(f)
-    lamda, _ = d['lamda'], d['psi']
-for ell in range(1, big_n+1):
-    partitions = hl.statistic.calculate_partition(big_m, ell, small_m, sigma, lamda, mode=2)
-    big_l = max([max(p) for p in partitions])
-    print big_l, partitions
-    result.append(big_m * sigma / (1.0 * ell * small_m / big_m + 1.0 * sigma * sum([1.0 / lamda[i] for i in range(big_l)]) / big_l))
-axes.plot(range(1, big_n+1), result, label='theoretical best', color='black', linestyle='-', linewidth=1)
 
 axes.grid(True, linestyle='dotted')
 axes.set_ylabel('Mean squared error', fontsize=24)
