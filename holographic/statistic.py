@@ -87,7 +87,7 @@ def calculate_zetas(big_m, big_n, small_m, vari, l_set):
     return zeta_j, index
 
 
-def get_min_entries(big_m, big_n, small_m, vari, l_set, mode):
+def get_min_entries(big_m, big_n, small_m, vari, l_set, mode, zeta_j):
     """Calculate the distribution of subspaces for the greatest MSE reduction."""
     # size-check
     l_set = l_set[:big_m]
@@ -95,7 +95,10 @@ def get_min_entries(big_m, big_n, small_m, vari, l_set, mode):
         raise ValueError('lambda set shorter than space size')
 
     if mode == 1:
-        zeta_j, index = calculate_zetas(big_m, big_n, small_m, vari, l_set)
+        if zeta_j is None:
+            zeta_j, index = calculate_zetas(big_m, big_n, small_m, vari, l_set)
+        else:
+            index = None
 
         # do initial rounding
         output = map(lambda x: int(round(x)), zeta_j)
@@ -115,7 +118,7 @@ def get_min_entries(big_m, big_n, small_m, vari, l_set, mode):
                 total -= 1
 
         if len([1 for x in distance if x[0] < 0]) + total < big_n * small_m:
-            print zeta_j, big_n
+            print distance
             raise ValueError('arguments incompatible, try something else.')
 
         if max(output) > big_n:
@@ -145,7 +148,8 @@ def get_min_entries(big_m, big_n, small_m, vari, l_set, mode):
                             overflow = 0
         return output
     elif mode == 2:
-        zeta_j, _ = calculate_zetas(big_m, big_n, small_m, vari, l_set)
+        if zeta_j is None:
+            zeta_j, _ = calculate_zetas(big_m, big_n, small_m, vari, l_set)
 
         output = [int(z) for z in zeta_j]
         remainder = big_n * small_m - sum(output)
@@ -191,10 +195,10 @@ def zeta(big_n, mul, l_set, var, memo_dict):
         return memo_dict[param]
 
 
-def calculate_partition(space_size, num_subspace, subspace_size, sigma, lamda, mode=1):
+def calculate_partition(space_size, num_subspace, subspace_size, sigma, lamda, mode=1, zeta_j=None):
     """Finds a partition that allows for a smooth recovery."""
     # Given the eigenvalues, find the combination of spaces that yields the best MSE reduction.
-    exact_entries = get_min_entries(space_size, num_subspace, subspace_size, sigma, lamda, mode)
+    exact_entries = get_min_entries(space_size, num_subspace, subspace_size, sigma, lamda, mode, zeta_j)
 
     # === OLD ALGORITHM ===
     # Partition the spaces into subspaces.
