@@ -1,14 +1,19 @@
-# Ignore everything in root
+# Ignore everything in root directory,
 /*
 
-# Except for .py files in the package,
-!/holographic/**/*.py
-# image files,
-!/img/*
-# analysis data files,
-!/plot_data/*
-# example scripts,
-!/scripts/*
-# and some files in root
-!README.md
+# except this file and README.md
 !.gitignore
+!README.md
+
+# Unignore these directories
+!/holographic/
+!/img/
+!/plot_data/
+!/scripts/
+
+# Ignore everything in /plot_data/ except README.md
+/plot_data/*
+!/plot_data/README.md
+
+# Ignore all compiled Python files
+*.pyc
