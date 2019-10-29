@@ -40,18 +40,22 @@ for mode in range(1, 4+1):
 
         total_result.append(result)
     else:
-        # mode "4" is for theoretical best
-        result = []
+        # mode "4" and "5" are for theoretical best with mode 1 and 2, resp.
+        result_1 = []
+        result_2 = []
         for ell in range(1, big_n+1):
             big_k = ell * small_m
             big_l = big_m
             zetas = [1.0 * big_k / big_l + sigma * (sum([1.0 / lm for lm in lamda[:big_l]]) / big_l - 1.0 / lamda[i]) for i in range(big_l)]
-            while any([z<1 for z in zetas]):
+            while any([z<0 for z in zetas]):
                 big_l -= 1
                 zetas = [1.0 * big_k / big_l + sigma * (sum([1.0 / lm for lm in lamda[:big_l]]) / big_l - 1.0 / lamda[i]) for i in range(big_l)]
-            # TODO: fix this equation
-            result.append(big_m / (1.0 * big_k / big_m / sigma + sum([1.0 / lm for lm in lamda[:big_l]]) / big_l))
-        total_result.append(result)
+            sj1 = hl.statistic.get_min_entries(big_m, ell, small_m, sigma, lamda, 1, zetas)
+            sj2 = hl.statistic.get_min_entries(big_m, ell, small_m, sigma, lamda, 2, zetas)
+            result_1.append(sum([lm * sigma / (sigma + lm * sj) for lm, sj in zip(lamda[:big_l], sj1[:big_l])]) + sum(lamda[big_l:]))
+            result_2.append(sum([lm * sigma / (sigma + lm * sj) for lm, sj in zip(lamda[:big_l], sj2[:big_l])]) + sum(lamda[big_l:]))
+        total_result.append(result_1)
+        total_result.append(result_2)
 
 fnc = image_fn.split('.')[0]
 with open('modeanalysis_{}'.format('aggregate' if use_aggregate else fnc), 'w') as f:

@@ -2,6 +2,9 @@ import math
 import pickle
 from matplotlib import pyplot
 
+pyplot.rc('text', usetex=True)
+pyplot.rc('font', family='Palatino')
+
 # Adjustable parameters
 big_m = 64
 sigma = 0.01
@@ -20,9 +23,7 @@ big_k = math.ceil(max(b1, b2))
 km = 1.0 * big_k / big_m
 
 fig, axes = pyplot.subplots(1)
-fig.set_size_inches(12, 9)
-
-fig.set_size_inches(12, 9)
+fig.set_size_inches(8, 6)
 
 axes.plot(range(1, big_m+1), rho, color='black', linestyle='-')
 
@@ -37,8 +38,9 @@ axes.annotate('$\\frac{K}{M}$',
               horizontalalignment='left', verticalalignment='center')
 
 axes.grid(True, linestyle='dotted')
-# axes.set_ylabel('[insert y-label here]', fontsize=24)
-# axes.set_xlabel('[insert x-label here]', fontsize=24)
-# axes.set_title('[insert title here]', fontsize=32)
+axes.set_ylabel(r'$\rho (j)$', fontsize=24)
+axes.set_yticks([])
+axes.set_xlabel('$j$', fontsize=24)
+axes.set_xticks(range(0, big_m+1, 8))
 pyplot.savefig('rho_plot.png')
 pyplot.show()
