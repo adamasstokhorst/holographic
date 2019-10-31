@@ -11,13 +11,13 @@ fns = []
 for _, _, fns in os.walk(data_path):
     break
 
-fns = [os.path.join(data_path, fn) for fn in fns]
+fns = [os.path.join(data_path, fn) for fn in fns if fn != 'README.md']
 
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
 
 for i, fn in enumerate(fns):
-    with open(fn, 'rb') as f:
+    with open(fn, 'r') as f:
         data = pickle.load(f)
 
     color = pyplot.cm.get_cmap('brg', len(fns))(i)

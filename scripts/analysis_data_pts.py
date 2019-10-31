@@ -66,7 +66,7 @@ for fname in fnames:
         y_points.append(total_mse)
         y_points_s.append(total_mse_s)
 
-    with open('plot_data/' + fname.split('/')[-1], 'wb') as f:
+    with open('plot_data/' + fname.split('/')[-1], 'w') as f:
         pickle.dump({'x': x_points,
                      'y': y_points,
                      'y2': y_points_s,
