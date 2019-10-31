@@ -33,7 +33,8 @@ axes.semilogy(range(1, big_m+1), lamda, label='aggregate', color='black', linest
 axes.grid(True, linestyle='dotted')
 axes.set_ylabel(r'$\lambda_j$ values', fontsize=28)
 axes.set_xlabel(r'$j$', fontsize=24)
-axes.set_title('Plot of lambda values for various images', fontsize=32)
+axes.set_title(r"""\Huge Lambda plots for various images
+                   \Large $\left ( M={} \right )$""".format(big_m))
 axes.legend(fontsize=8, ncol=5)
 pyplot.savefig('lambda_plots.png')
 pyplot.show()
