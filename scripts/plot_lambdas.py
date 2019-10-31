@@ -29,7 +29,7 @@ for i, fn in enumerate(fns):
     
 print 'Calculating aggregate statistics...'
 lamda, _ = hl.statistic.calculate_statistic(big_m, hl.ImageHandler, *fns)
-axes.semilogy(range(1, big_m+1), lamda, label='aggregate', color='black', linestyle='-', linewidth=5)
+axes.semilogy(range(1, big_m+1), lamda, label='aggregate', color='black', linestyle='-', linewidth=2.5)
 
 axes.grid(True, linestyle='dotted')
 axes.set_ylabel(r'$\lambda_j$ values', fontsize=28)
