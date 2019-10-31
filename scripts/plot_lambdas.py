@@ -19,6 +19,7 @@ fns = [os.path.join(folder, f) for f in fns]
 
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
+fig.set_dpi(200)
 
 for i, fn in enumerate(fns):
     print 'Processing {}...'.format(fn)
@@ -37,4 +38,3 @@ axes.set_title(r"""\Huge Lambda plots for various images
                    \Large $\left ( M={} \right )$""".format(big_m))
 axes.legend(fontsize=8, ncol=5)
 pyplot.savefig('lambda_plots.png')
-pyplot.show()

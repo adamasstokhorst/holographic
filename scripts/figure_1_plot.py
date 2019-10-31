@@ -24,6 +24,7 @@ km = 1.0 * big_k / big_m
 
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
+fig.set_dpi(200)
 
 axes.plot(range(1, big_m+1), rho, color='black', linestyle='-')
 
@@ -43,4 +44,3 @@ axes.set_yticks([])
 axes.set_xlabel('$j$', fontsize=24)
 axes.set_xticks(range(0, big_m+1, 8))
 pyplot.savefig('rho_plot.png')
-pyplot.show()

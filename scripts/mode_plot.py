@@ -15,6 +15,7 @@ fnset = list(set([fn.split('_')[1] for fn in fns if 'aggregate' not in fn]))
 
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
+fig.set_dpi(200)
 
 key_list = []
 for fn in fns:
@@ -68,4 +69,3 @@ axes.set_title(r"""\Huge Calculated best case MSE plots for various data
                    \Large $\left ( M={},m={},\sigma^2_n={} \right )$""".format(big_m, small_m, sigma))
 axes.legend()
 pyplot.savefig('mode_analysis_plot.png')
-pyplot.show()

@@ -15,6 +15,7 @@ fns = [os.path.join(data_path, fn) for fn in fns if fn != 'README.md']
 
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
+fig.set_dpi(200)
 
 for i, fn in enumerate(fns):
     with open(fn, 'r') as f:
@@ -30,4 +31,3 @@ axes.set_xlabel(r'$\ell$', fontsize=24)
 axes.set_title('Aggregate MSE plots for various images', fontsize=32)
 axes.legend()
 pyplot.savefig('aggregate_mse_plot.png')
-pyplot.show()

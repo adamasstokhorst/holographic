@@ -10,6 +10,7 @@ fn = 'modeanalysis_' + im_name
 
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
+fig.set_dpi(200)
 
 key_list = []
 with open(fn, 'r') as f:
@@ -67,4 +68,3 @@ axes.set_title(r"""\Huge Calculated best case MSE plots for \texttt{{{}}}
                    \Large $\left ( M={},m={} \right )$""".format(im_name, big_m, small_m))
 axes.legend()
 pyplot.savefig('sigma_analysis_plot.png')
-pyplot.show()
