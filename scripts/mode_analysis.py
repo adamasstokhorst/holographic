@@ -50,6 +50,8 @@ for mode in range(1, 4+1):
             while any([z<0 for z in zetas]):
                 big_l -= 1
                 zetas = [1.0 * big_k / big_l + sigma * (sum([1.0 / lm for lm in lamda[:big_l]]) / big_l - 1.0 / lamda[i]) for i in range(big_l)]
+            # temp hotfix so we don't raise IndexError
+            zetas += [0] * (max(0, big_n - len(zetas)))
             sj1 = hl.statistic.get_min_entries(big_m, ell, small_m, sigma, lamda, 1, zetas)
             sj2 = hl.statistic.get_min_entries(big_m, ell, small_m, sigma, lamda, 2, zetas)
             result_1.append(sum([lm * sigma / (sigma + lm * sj) for lm, sj in zip(lamda[:big_l], sj1[:big_l])]) + sum(lamda[big_l:]))
@@ -58,14 +60,19 @@ for mode in range(1, 4+1):
         total_result.append(result_2)
 
 fnc = image_fn.split('.')[0]
+try:
+    with open('modeanalysis_{}'.format('aggregate' if use_aggregate else fnc), 'r') as f:
+        data = pickle.load(f)
+except IOError:
+    data = {}
+
 with open('modeanalysis_{}'.format('aggregate' if use_aggregate else fnc), 'w') as f:
-    pickle.dump({'param':
-                    {'big_m': big_m,
-                     'small_m': small_m,
-                     'big_n': big_n,
-                     'sigma': sigma},
-                 'label': 'aggregate' if use_aggregate else fnc,
-                 'data':
-                    [{'x': range(1, big_n+1),
-                      'y': result,
-                      'mode': mode+1} for mode, result in enumerate(total_result)]}, f)
+    params = frozenset({'big_m': big_m,
+                        'small_m': small_m,
+                        'big_n': big_n,
+                        'sigma': sigma}.items())
+    data[params] = {'label': 'aggregate' if use_aggregate else fnc,
+                    'data': [{'x': range(1, big_n+1),
+                              'y': result,
+                              'mode': mode+1} for mode, result in enumerate(total_result)]}
+    pickle.dump(data, f)

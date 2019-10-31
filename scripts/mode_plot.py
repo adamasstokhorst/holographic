@@ -1,5 +1,6 @@
 import os
 import pickle
+import collections
 from matplotlib import pyplot
 
 pyplot.rc('text', usetex=True)
@@ -15,22 +16,33 @@ fnset = list(set([fn.split('_')[1] for fn in fns if 'aggregate' not in fn]))
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
 
-prev_param = None
+key_list = []
+for fn in fns:
+    with open(fn, 'r') as f:
+        raw_data = pickle.load(f)
+        key_list.extend(raw_data.keys())
+
+counts = collections.Counter(key_list).most_common()
+
+print 'Choose parameter to plot:'
+for i, c in enumerate(counts):
+    print '  {}: {} ({} entries)'.format(i, list(c[0]), c[1])
+print '>',
+choice = int(raw_input())
+param = counts[choice][0]
 
 for fn in fns:
     with open(fn, 'r') as f:
         raw_data = pickle.load(f)
 
-    data = raw_data['data']
-    name = raw_data['label']
-    param = raw_data['param']
-    
-    if param != prev_param and prev_param is not None:
-        print 'WARNING: parameter is not shared between all data'
-    prev_param = param
+    if param not in raw_data:
+        continue
+
+    data = raw_data[param]['data']
+    name = raw_data[param]['label']
 
     color = 'black' if name == 'aggregate' else pyplot.cm.get_cmap('brg', len(fnset))(fnset.index(name))
-    
+
     for d in data:
         mode = d['mode']
         if mode == 5:
@@ -43,10 +55,11 @@ for fn in fns:
             label = '{} (thr. best)'.format(name)
             lw = 2
         linestyle = '-.' if mode == 1 else '--' if mode == 2 else ':' if mode == 3 else '-'
-        
+
         axes.plot(d['x'], d['y'], label=label, color=color, linestyle=linestyle, linewidth=lw)
 
-big_m, small_m, sigma = prev_param['big_m'], prev_param['small_m'], prev_param['sigma']
+param = dict(param)
+big_m, small_m, sigma = param['big_m'], param['small_m'], param['sigma']
 
 axes.grid(True, linestyle='dotted')
 axes.set_ylabel('Mean squared error', fontsize=24)
