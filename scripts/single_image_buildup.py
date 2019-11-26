@@ -7,12 +7,12 @@ small_m = 4
 big_n = 8
 sigma = 0.01
 
-fn = 'oldlady.jpg'
+fn = 'img/oldlady.jpg'
 use_im_stats = True
 
 if use_im_stats:
     # using image-specific statistics
-    lamda, psi = hl.statistic.calculate_statistic(big_m, hl.ImageHandler, 'img/' + fn)
+    lamda, psi = hl.statistic.calculate_statistic(big_m, hl.ImageHandler, fn)
     partitions = hl.statistic.calculate_partition(big_m, big_n, small_m, sigma, lamda, mode=1)
     print partitions
 else:
@@ -25,7 +25,7 @@ else:
 sp = range(big_n)
 for i in xrange(1, big_n + 1):
     print i,
-    image_in = hl.ImageHandler('img/' + fn, big_m, mode='r', color_mode='RGB')
+    image_in = hl.ImageHandler(fn, big_m, mode='r', color_mode='RGB')
     image_out = hl.ImageHandler('ind_1_bout_{}_{}'.format(i, fn), big_m, mode='w', color_mode='RGB')
     image_out.params(*image_in.params())
 

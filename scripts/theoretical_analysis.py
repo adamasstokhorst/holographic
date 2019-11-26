@@ -1,6 +1,7 @@
 import pickle
 import itertools
 import collections
+import os
 import holographic as hl
 
 big_m = 64
@@ -9,14 +10,14 @@ big_n = 8
 sigma = 0.01
 
 use_aggregate = False
-image_fn = 'dragon.png'
+image_fn = 'img/dragon.png'
 
 if use_aggregate:
     with open('aggregate_statistics', 'r') as f:
         d = pickle.load(f)
         lamda, _ = d['lamda'], d['psi']
 else:
-    lamda, _ = hl.statistic.calculate_statistic(big_m, hl.ImageHandler, 'img/' + image_fn)
+    lamda, _ = hl.statistic.calculate_statistic(big_m, hl.ImageHandler, image_fn)
 
 total_result = []
 
@@ -40,7 +41,7 @@ for mode in range(1, 4+1):
 
         total_result.append(result)
     else:
-        # mode "4" is for theoretical best.
+        # mode "4" is for theoretical best
         result = []
         for ell in range(1, big_n+1):
             big_k = ell * small_m
@@ -52,7 +53,7 @@ for mode in range(1, 4+1):
             result.append(sum([lm * sigma / (sigma + lm * z) for lm, z in zip(lamda[:big_l], zetas[:big_l])]) + sum(lamda[big_l:]))
         total_result.append(result)
 
-fnc = image_fn.split('.')[0]
+fnc = os.path.basename(image_fn).split('.')[0]
 try:
     with open('modeanalysis_{}'.format('aggregate' if use_aggregate else fnc), 'r') as f:
         data = pickle.load(f)
