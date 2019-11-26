@@ -10,6 +10,7 @@
 !/img/
 !/plot_data/
 !/scripts/
+!/control/
 
 # Ignore everything in /plot_data/ except README.md
 /plot_data/*
