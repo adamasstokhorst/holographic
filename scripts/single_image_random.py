@@ -10,11 +10,21 @@ mode = 1
 fn = 'img/dragon.png'
 use_im_stats = True
 
+print 'Simulating random recovery on {}'.format(fn)
+print '  Parameters: M={}, m={}, N={}, sigma^2={} on mode {}'.format(big_m, small_m, big_n, sigma, mode)
+print '  Using {} statistics...'.format('image' if use_im_stats else 'aggregate')
+
 if use_im_stats:
     # using image-specific statistics
     lamda, psi = hl.statistic.calculate_statistic(big_m, hl.ImageHandler, fn)
     partitions = hl.statistic.calculate_partition(big_m, big_n, small_m, sigma, lamda, mode=mode)
-    print partitions
+    
+    import pprint
+    import collections
+    counter = collections.Counter(reduce(lambda a, b: a + b, partitions))
+    print 'Partitions: ',
+    pprint.pprint(partitions)
+    print 'Sampling distribution: ' + ' '.join(['[{}]{}'.format(*x) for x in counter.most_common()])
 else:
     # using aggregate statistics
     d = Sh.load_data('aggregate_statistics', {'big_m': big_m,
@@ -23,6 +33,7 @@ else:
                                               'sigma': sigma})
     lamda, psi, partitions = d['lamda'], d['psi'], d['partitions'][mode]
 
+print 'Processing ell = '
 for i in xrange(1, big_n + 1):
     print i,
     image_in = hl.ImageHandler(fn, big_m, mode='r', color_mode='RGB')
@@ -34,3 +45,5 @@ for i in xrange(1, big_n + 1):
         image_out(packet)
 
     image_out.close()
+
+print
