@@ -49,6 +49,7 @@ for fn in fns:
         if mode <= 3:
             label = '{} (mode {})'.format(name, mode)
             lw = 1
+            # continue  # uncomment this line to hide mode 1/2/3 plots
         else:
             label = '{} (thr. best)'.format(name)
             lw = 2
