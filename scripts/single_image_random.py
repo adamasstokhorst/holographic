@@ -1,4 +1,3 @@
-import random
 import holographic as hl
 import ScriptHelper as Sh
 
@@ -8,7 +7,7 @@ big_n = 8
 sigma = 0.01
 mode = 1
 
-fn = 'img/oldlady.jpg'
+fn = 'img/dragon.png'
 use_im_stats = True
 
 if use_im_stats:
@@ -24,15 +23,14 @@ else:
                                               'sigma': sigma})
     lamda, psi, partitions = d['lamda'], d['psi'], d['partitions'][mode]
 
-sp = random.sample(range(big_n), big_n)
 for i in xrange(1, big_n + 1):
     print i,
     image_in = hl.ImageHandler(fn, big_m, mode='r', color_mode='RGB')
-    outname = ('BUILDUP_{}_{}.png' if use_im_stats else 'BUILDUP_{}_aggr_{}.png').format(Sh.get_fname(fn), i)
+    outname = ('SINGLE_{}_{}.png' if use_im_stats else 'SINGLE_{}_aggr_{}.png').format(Sh.get_fname(fn), i)
     image_out = hl.ImageHandler(outname, big_m, mode='w', color_mode='RGB')
     image_out.params(*image_in.params())
 
-    for _, packet in hl.helpers.simulate(image_in(), psi, lamda, partitions, big_m, small_m, big_n, sigma, lost_space=sp[i:]):
+    for _, packet in hl.helpers.simulate(image_in(), psi, lamda, partitions, big_m, small_m, big_n, sigma, ell=i):
         image_out(packet)
 
     image_out.close()
