@@ -29,15 +29,18 @@ print '>',
 choice = int(raw_input())
 param = counts[choice][0]
 
-print param
-
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
 fig.set_dpi(200)
 
 for i, fn in enumerate(fns):
     with open(fn, 'r') as f:
-        data = pickle.load(f)
+        raw_data = pickle.load(f)
+    
+    if param not in raw_data:
+        continue
+    
+    data = raw_data[param]
 
     color = pyplot.cm.get_cmap('brg', len(fns))(i)
     axes.semilogy(data['x'], data['y'], label=data['label'], color=color, linestyle='-')
