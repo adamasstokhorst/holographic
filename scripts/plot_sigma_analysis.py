@@ -43,9 +43,6 @@ for param in sorted([sorted(list(x)) for x in raw_data.keys()]):
 
     for d in data:
         mode = d['mode']
-        if mode == 5:
-            break
-
         if mode <= 3:
             label = None  # r'$\sigma^2_n={}$ (mode {})'.format(sigma, mode)
             lw = 1

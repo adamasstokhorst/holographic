@@ -46,9 +46,6 @@ for fn in fns:
 
     for d in data:
         mode = d['mode']
-        if mode == 5:
-            break
-
         if mode <= 3:
             label = '{} (mode {})'.format(name, mode)
             lw = 1
