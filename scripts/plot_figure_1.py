@@ -53,3 +53,5 @@ axes.set_yticks([])
 axes.set_xlabel('$j$', fontsize=24)
 axes.set_xticks(range(0, big_m+1, 8))
 pyplot.savefig('rho_plot.png')
+
+print 'Saved to rho_plot.png'

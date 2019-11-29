@@ -54,3 +54,5 @@ axes.set_title(r"""\Huge Aggregate MSE plots for various images
 axes.set_title('', fontsize=32)
 axes.legend()
 pyplot.savefig('aggregate_mse_plot.png')
+
+print 'Saved to aggregate_mse_plot.png'

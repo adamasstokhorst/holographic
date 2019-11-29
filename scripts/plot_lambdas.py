@@ -14,13 +14,13 @@ big_m = 64
 # big_n = 8
 # sigma = 0.01
 
-fns = []
-for _, _, fns in os.walk(folder):
+all_fns = []
+for _, _, all_fns in os.walk(folder):
     break
 
-fns = [os.path.join(folder, f) for f in fns]
+all_fns = [os.path.join(folder, f) for f in all_fns]
 if files:
-    fns = [f for f in fns if f in files]
+    fns = [f for f in all_fns if f in files]
 
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
@@ -29,11 +29,11 @@ fig.set_dpi(200)
 for i, fn in enumerate(fns):
     print 'Processing {}...'.format(fn)
     lamda, _ = hl.statistic.calculate_statistic(big_m, hl.ImageHandler, fn)
-    color = pyplot.cm.get_cmap('Spectral', len(fns))(i)
+    color = pyplot.cm.get_cmap('brg', len(fns))(i)
     axes.semilogy(range(1, big_m+1), lamda, label='.'.join(fn.split('/')[-1].split('.')[:-1]), color=color, linestyle='-')
     
 print 'Calculating aggregate statistics...'
-lamda, _ = hl.statistic.calculate_statistic(big_m, hl.ImageHandler, *fns)
+lamda, _ = hl.statistic.calculate_statistic(big_m, hl.ImageHandler, *all_fns)
 axes.semilogy(range(1, big_m+1), lamda, label='aggregate', color='black', linestyle='-', linewidth=2.5)
 
 axes.grid(True, linestyle='dotted')
@@ -43,3 +43,5 @@ axes.set_title(r"""\Huge Lambda plots for various images
                    \Large $\left ( M={} \right )$""".format(big_m))
 axes.legend(fontsize=8, ncol=5)
 pyplot.savefig('lambda_plots.png')
+
+print 'Saved to lambda_plots.png'
