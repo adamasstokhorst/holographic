@@ -17,6 +17,9 @@ upper_limit = float('inf')
 
 handler = hl.ImageHandler
 
+print 'Calculating simulated recovery results (using random sampling)...'
+print '  Parameters: M={}, m={}, N={}, sigma^2={} on mode {}'.format(big_m, small_m, big_n, sigma, mode)
+
 params = {'big_m': big_m, 'small_m': small_m, 'big_n': big_n, 'sigma': sigma}
 d = Sh.load_data('aggregate_statistics', params)
 d['partitions'] = d['partitions'][mode]

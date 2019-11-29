@@ -18,6 +18,9 @@ params = {'big_m': big_m,
 
 fnames += ['*AGGREGATE*']
 
+print 'Calculating theoretical best results...'
+print '  Parameters: M={}, m={}, N={}, sigma^2={}'.format(big_m, small_m, big_n, sigma)
+
 for image_fn in fnames:
     if image_fn == '*AGGREGATE*':
         print 'Processing aggregate results...'
