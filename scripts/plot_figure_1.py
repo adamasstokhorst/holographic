@@ -5,13 +5,22 @@ from matplotlib import pyplot
 pyplot.rc('text', usetex=True)
 pyplot.rc('font', family='Palatino')
 
-# Adjustable parameters
-big_m = 64
-sigma = 0.01
-
 with open('aggregate_statistics', 'r') as f:
     d = pickle.load(f)
-    lamda, _ = d['lamda'], d['psi']
+
+params = [sorted(list(p)) for p in d.keys()]
+
+print 'Choose parameter to plot:'
+for i, c in enumerate(params):
+    print '  {}: {}'.format(i, c)
+print '>',
+choice = int(raw_input())
+param = params[choice]
+p_dict = dict(param)
+
+big_m = p_dict['big_m']
+sigma = p_dict['sigma']
+lamda = d[frozenset(param)]['lamda']
 # lamda = [0.8**i for i in range(big_m)]
 
 harmonic_mean = sum([1.0 / lm for lm in lamda]) / big_m

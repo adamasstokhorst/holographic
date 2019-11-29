@@ -59,12 +59,12 @@ for param in sorted([sorted(list(x)) for x in raw_data.keys()]):
     ctr += 1
 
 param = dict(sub_param)
-big_m, small_m = param['big_m'], param['small_m']
+big_m, small_m, big_n = param['big_m'], param['small_m'], param['big_n']
 
 axes.grid(True, linestyle='dotted')
 axes.set_ylabel('Mean squared error', fontsize=24)
 axes.set_xlabel(r'$\ell$', fontsize=24)
 axes.set_title(r"""\Huge Calculated best case MSE plots for \texttt{{{}}}
-                   \Large $\left ( M={},m={} \right )$""".format(im_name, big_m, small_m))
+                   \Large $\left ( M={},m={},N={} \right )$""".format(im_name, big_m, small_m, big_n))
 axes.legend()
 pyplot.savefig('sigma_analysis_plot.png')
