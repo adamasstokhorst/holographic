@@ -5,17 +5,22 @@ from matplotlib import pyplot
 pyplot.rc('text', usetex=True)
 pyplot.rc('font', family='Palatino')
 
+# image files to use, leave empty to use all
+files = []  # e.g. ['img/dragon.png', 'img/bratan.jpg']
+folder = 'img/'
+# parameters
 big_m = 64
 # small_m = 8
 # big_n = 8
 # sigma = 0.01
-folder = 'img/'
 
 fns = []
 for _, _, fns in os.walk(folder):
     break
 
 fns = [os.path.join(folder, f) for f in fns]
+if files:
+    fns = [f for f in fns if f in files]
 
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
