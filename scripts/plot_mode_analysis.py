@@ -11,7 +11,7 @@ for _, _, fns in os.walk('.\\'):
     break
 
 fns = [fn for fn in fns if fn.startswith('modeanalysis')]
-fnset = list(set([fn.split('_')[1] for fn in fns if 'aggregate' not in fn]))
+fnset = [fn.split('_')[1] for fn in fns if 'aggregate' not in fn]
 
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
@@ -49,7 +49,7 @@ for fn in fns:
         if mode <= 3:
             label = '{} (mode {})'.format(name, mode)
             lw = 1
-            # continue  # uncomment this line to hide mode 1/2/3 plots
+            continue  # comment this line to unhide mode 1/2/3 plots
         else:
             label = '{} (thr. best)'.format(name)
             lw = 2
