@@ -54,7 +54,6 @@ axes.set_ylabel('(Log) Mean squared error', fontsize=24)
 axes.set_xlabel(r'$\ell$', fontsize=24)
 axes.set_title(r"""\Huge Aggregate MSE plots for various images
                    \Large $\left ( M={},m={},N={},\sigma^2_n={} \right )$""".format(big_m, small_m, big_n, sigma))
-axes.set_title('', fontsize=32)
 axes.legend()
 pyplot.savefig('aggregate_mse_plot.png')
 
