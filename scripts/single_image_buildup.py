@@ -26,6 +26,7 @@ if use_im_stats:
     print 'Partitions: ',
     pprint.pprint(partitions)
     print 'Sampling distribution: ' + ' '.join(['[{}]{}'.format(*x) for x in counter.most_common()])
+    print 'Lambdas: ', pprint.pprint(lamda)
 else:
     # using aggregate statistics
     d = Sh.load_data('aggregate_statistics', {'big_m': big_m,
