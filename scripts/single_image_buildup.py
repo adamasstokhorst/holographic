@@ -19,14 +19,6 @@ if use_im_stats:
     # using image-specific statistics
     lamda, psi = hl.statistic.calculate_statistic(big_m, hl.ImageHandler, fn)
     partitions = hl.statistic.calculate_partition(big_m, big_n, small_m, sigma, lamda, mode=mode)
-    
-    import pprint
-    import collections
-    counter = collections.Counter(reduce(lambda a, b: a + b, partitions))
-    print 'Partitions: ',
-    pprint.pprint(partitions)
-    print 'Sampling distribution: ' + ' '.join(['[{}]{}'.format(*x) for x in counter.most_common()])
-    print 'Lambdas: ', pprint.pprint(lamda)
 else:
     # using aggregate statistics
     d = Sh.load_data('aggregate_statistics', {'big_m': big_m,
@@ -34,6 +26,14 @@ else:
                                               'big_n': big_n,
                                               'sigma': sigma})
     lamda, psi, partitions = d['lamda'], d['psi'], d['partitions'][mode]
+
+import pprint
+import collections
+counter = collections.Counter(reduce(lambda a, b: a + b, partitions))
+print 'Partitions: ',
+pprint.pprint(partitions)
+print 'Sampling distribution: ' + ' '.join(['[{}]{}'.format(*x) for x in counter.most_common()])
+print 'Lambdas: ', pprint.pprint(lamda)
 
 sp = random.sample(range(big_n), big_n)
 print 'Processing ell = '
