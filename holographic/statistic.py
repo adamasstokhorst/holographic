@@ -224,3 +224,30 @@ def calculate_partition(space_size, num_subspace, subspace_size, sigma, lamda, m
         partition[i % num_subspace].append(subspaces[i])
 
     return sorted(partition)
+
+
+def get_lp_lambda(p_norm, big_m, gamma=0.98, a_constant=0.18):
+    """Returns lambda profile using L^p norm."""
+    import itertools
+
+    # big_m needs to be a perfect square
+    side_length = int((big_m + 1)**0.5)
+    if side_length**2 != big_m:
+        raise ValueError('big_m must be a perfect square. (got {})'.format(big_m))
+
+    matrix = numpy.zeros((big_m, big_m))
+    for i, j in itertools.product(range(1, big_m+1), repeat=2):
+        a, b = i / side_length, i % side_length
+        p, q = j / side_length, j % side_length
+        gamma_power = (numpy.abs(a - p)**p_norm + numpy.abs(b - q)**p_norm)**(1.0 / p_norm)
+        matrix[i-1, j-1] = a_constant * gamma**gamma_power
+
+    lamda, psi = numpy.linalg.eig(matrix)
+    zipped_lamda = sorted(zip(lamda, range(len(lamda))), reverse=True)
+    lamda, new_order = zip(*zipped_lamda)
+    perm_matrix = numpy.zeros((big_m, big_m))
+    for i, j in enumerate(new_order):
+        perm_matrix[j, i] = 1
+    psi = numpy.matmul(psi, perm_matrix)
+
+    return lamda, psi
