@@ -1,5 +1,6 @@
 import os
 import pickle
+import itertools
 import collections
 from matplotlib import pyplot
 
@@ -29,6 +30,18 @@ print '>',
 choice = int(raw_input())
 param = counts[choice][0]
 
+print 'Choose lines to display:'
+print '(image-specific, aggregate, line, grid -- as binary string)'
+print '(e.g. 1001 will display image-specific plot and grid-lambda plot)'
+print '>',
+choice = raw_input()
+selector = [c == '1' for c in choice]
+keys = ['img', 'aggregate', 'line', 'grid']
+ls = {'img': '--',
+      'aggregate': '-',
+      'line': ':',
+      'grid': '-.'}
+
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
 fig.set_dpi(200)
@@ -43,8 +56,8 @@ for i, fn in enumerate(fns):
     data = raw_data[param]
 
     color = pyplot.cm.get_cmap('brg', len(fns))(i)
-    axes.semilogy(data['x'], data['y'], label=data['label'], color=color, linestyle='-')
-    axes.semilogy(data['x'], data['y2'], label=data['label'] + ' (sp)', color=color, linestyle='--')
+    for k in itertools.compress(keys, selector):
+        axes.semilogy(data['x'], data[k], label='{} ({})'.format(data['label'], k), color=color, linestyle=ls[k])
 
 param = dict(param)
 big_m, small_m, big_n, sigma = param['big_m'], param['small_m'], param['big_n'], param['sigma']
