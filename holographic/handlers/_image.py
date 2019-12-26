@@ -18,10 +18,13 @@ class ImageHandler(object):
         if self._block_width**2 != self._block_size:
             raise ValueError('block_size must be a perfect square. (got {})'.format(block_size))
         if mode == 'r':
-            self._f = Image.open(fn).convert(color_mode)
+            try:
+                self._f = Image.open(fn).convert(color_mode)
+            except IOError as e:
+                raise IOError('error when opening {} ({})'.format(fn, e))
             self._fn = fn
-            self._height = self._f.width
-            self._width = self._f.height
+            self._height = self._f.height
+            self._width = self._f.width
             self._num_bands = len(color_mode)  # hack
 
             self._get_padding()
@@ -59,13 +62,13 @@ class ImageHandler(object):
 
         pixels = [numpy.array(list(self._f.getdata(band=x))) for x in xrange(self._num_bands)]
         for i, p in enumerate(pixels):
-            p.shape = self._width, self._height
-            pixels[i] = numpy.pad(p, ((0, right_pad), (0, bottom_pad)), 'edge') / 128.0 - 1
+            p.shape = self._height, self._width
+            pixels[i] = numpy.pad(p, ((0, bottom_pad), (0, right_pad)), 'edge') / 128.0 - 1
 
         self._average = [numpy.zeros((1, self._block_size)) for i in xrange(self._num_bands)]
-        for i, j in [(x, y) for x in xrange(ud_blocks) for y in xrange(lr_blocks)]:
+        for i, j in [(y, x) for y in xrange(ud_blocks) for x in xrange(lr_blocks)]:
             for k, p in enumerate(pixels):
-                self._average[k] += p[j*self._block_width:(j+1)*self._block_width, i*self._block_width:(i+1)*self._block_width].flatten()
+                self._average[k] += p[i*self._block_width:(i+1)*self._block_width, j*self._block_width:(j+1)*self._block_width].flatten()
 
         for a in self._average:
             a /= lr_blocks * ud_blocks
@@ -79,18 +82,18 @@ class ImageHandler(object):
 
         pixels = [numpy.array(list(self._f.getdata(band=x))) for x in xrange(self._num_bands)]
         for i, p in enumerate(pixels):
-            p.shape = self._width, self._height
-            pixels[i] = numpy.pad(p, ((0, right_pad), (0, bottom_pad)), 'edge') / 128.0 - 1
+            p.shape = self._height, self._width
+            pixels[i] = numpy.pad(p, ((0, bottom_pad), (0, right_pad)), 'edge') / 128.0 - 1
 
-        for i, j in [(x, y) for x in xrange(ud_blocks) for y in xrange(lr_blocks)]:
-            d = [p[j*self._block_width:(j+1)*self._block_width, i*self._block_width:(i+1)*self._block_width].flatten() for p in pixels]
+        for i, j in [(y, x) for y in xrange(ud_blocks) for x in xrange(lr_blocks)]:
+            d = [p[i*self._block_width:(i+1)*self._block_width, j*self._block_width:(j+1)*self._block_width].flatten() for p in pixels]
             yield [list(a - b) for a, b in zip(d, self._average)]
 
         self._f.close()
 
     def _write_func(self, *args):
-        # lr_blocks = self._lr_blocks
-        ud_blocks = self._ud_blocks
+        lr_blocks = self._lr_blocks
+        # ud_blocks = self._ud_blocks
 
         # provide multiple arguments to write all of them in one go
         for arg in args:
@@ -107,19 +110,19 @@ class ImageHandler(object):
             patch = Image.fromarray(pixels)
             self._f.paste(patch, (self._x*self._block_width, self._y*self._block_width))
             patch.close()
-            self._y += 1
-            if self._y >= ud_blocks:
-                self._y = 0
-                self._x += 1
+            self._x += 1
+            if self._x >= lr_blocks:
+                self._x = 0
+                self._y += 1
 
     def params(self, *args):
         if self._mode == 'r':
             return self._height, self._width, self._average
         elif self._mode == 'w':
-            self._width = args[0]
-            self._height = args[1]
+            self._height = args[0]
+            self._width = args[1]
             self._average = args[2]
-            self._f = self._f.resize(args[:2])
+            self._f = self._f.resize((self._width, self._height))
             self._get_padding()
 
     def close(self):
