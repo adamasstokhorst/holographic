@@ -21,6 +21,8 @@ for _, _, all_fns in os.walk(folder):
 all_fns = [os.path.join(folder, f) for f in all_fns]
 if files:
     fns = [f for f in all_fns if f in files]
+else:
+    fns = all_fns
 
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
