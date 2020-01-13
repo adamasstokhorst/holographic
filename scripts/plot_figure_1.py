@@ -31,6 +31,8 @@ b2 = big_m * sigma * (harmonic_mean - 1.0 / lamda[0]) / (big_m - 1)
 big_k = math.ceil(max(b1, b2))
 km = 1.0 * big_k / big_m
 
+zetas = [km + sigma * (harmonic_mean - 1.0 / lm) for lm in lamda]
+
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
 fig.set_dpi(200)
@@ -48,10 +50,35 @@ axes.annotate('$\\frac{K}{M}$',
               horizontalalignment='left', verticalalignment='center')
 
 axes.grid(True, linestyle='dotted')
-axes.set_ylabel(r'$\rho (j)$', fontsize=24)
-axes.set_yticks([])
-axes.set_xlabel('$j$', fontsize=24)
+axes.set_ylabel(r'\Large $\rho (j)$')
+axes.set_yticks([min(rho), km, max(rho)])
+axes.set_xlabel(r'\Large $j$')
 axes.set_xticks(range(0, big_m+1, 8))
 pyplot.savefig('rho_plot.png')
 
 print 'Saved to rho_plot.png'
+
+fig, axes = pyplot.subplots(1)
+fig.set_size_inches(8, 6)
+fig.set_dpi(200)
+
+axes.plot(range(1, big_m+1), zetas, color='black', linestyle='-')
+
+xlim, ylim = pyplot.xlim(), pyplot.ylim()
+axes.plot([xlim[0], xlim[-1]], [km, km], color='grey', linestyle='--')
+pyplot.xlim(xlim)
+pyplot.ylim(ylim)
+
+axes.annotate('$\\frac{K}{M}$',
+              xy=(xlim[-1], km), xycoords='data',
+              xytext=(5, 0), textcoords='offset points', size=20,
+              horizontalalignment='left', verticalalignment='center')
+
+axes.grid(True, linestyle='dotted')
+axes.set_ylabel(r'\Large $\zeta (j)$')
+axes.set_yticks([min(zetas), km, max(zetas)])
+axes.set_xlabel(r'\Large $j$')
+axes.set_xticks(range(0, big_m+1, 8))
+pyplot.savefig('zeta_plot.png')
+
+print 'Saved to zeta_plot.png'
