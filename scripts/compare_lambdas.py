@@ -21,7 +21,7 @@ d = Sh.load_data('aggregate_statistics', params)
 lamda_agg, _ = d['lamda'], d['psi']
 
 fig, axes = pyplot.subplots(1)
-fig.set_size_inches(8, 6)
+fig.set_size_inches(9, 6)
 fig.set_dpi(200)
 
 cmap = pyplot.cm.get_cmap('brg', 3)
@@ -33,7 +33,7 @@ axes.grid(True, linestyle='dotted')
 axes.set_ylabel(r'(Log) $\lambda_j$ values', fontsize=28)
 axes.set_xlabel(r'$j$', fontsize=24)
 axes.set_title(r"""\Huge Lambda plots for different metrics
-                   \Large $\left ( M={},m={},N={},\sigma^2_n={} \right )$""".format(big_m, small_m, big_n, sigma))
+                   \Large $\left ( M={} \right )$""".format(big_m))
 axes.legend(fontsize=8, ncol=5)
 pyplot.savefig('lambda_compare_plots.png')
 
