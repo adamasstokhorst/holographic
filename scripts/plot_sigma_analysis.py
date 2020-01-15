@@ -39,7 +39,7 @@ for param in sorted([sorted(list(x)) for x in raw_data.keys()]):
     data = raw_data[param]['data']
     sigma = dict(param)['sigma']
 
-    color = pyplot.cm.get_cmap('brg', total)(ctr)
+    color = pyplot.cm.get_cmap('viridis', total)(ctr)
 
     for d in data:
         mode = d['mode']

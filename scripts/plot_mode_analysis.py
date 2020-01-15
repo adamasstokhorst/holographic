@@ -42,7 +42,7 @@ for fn in fns:
     data = raw_data[param]['data']
     name = raw_data[param]['label']
 
-    color = 'black' if name == 'aggregate' else pyplot.cm.get_cmap('brg', len(fnset))(fnset.index(name))
+    color = 'black' if name == 'aggregate' else pyplot.cm.get_cmap('viridis', len(fnset))(fnset.index(name))
 
     for d in data:
         mode = d['mode']

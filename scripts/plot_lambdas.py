@@ -25,13 +25,13 @@ else:
     fns = all_fns
 
 fig, axes = pyplot.subplots(1)
-fig.set_size_inches(8, 6)
+fig.set_size_inches(10, 6)
 fig.set_dpi(200)
 
 for i, fn in enumerate(fns):
     print 'Processing {}...'.format(fn)
     lamda, _ = hl.statistic.calculate_statistic(big_m, hl.ImageHandler, fn)
-    color = pyplot.cm.get_cmap('brg', len(fns))(i)
+    color = pyplot.cm.get_cmap('viridis', len(fns))(i)
     axes.semilogy(range(1, big_m+1), lamda, label='.'.join(fn.split('/')[-1].split('.')[:-1]), color=color, linestyle='-')
     
 print 'Calculating aggregate statistics...'

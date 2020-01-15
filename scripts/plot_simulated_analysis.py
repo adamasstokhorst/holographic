@@ -55,9 +55,9 @@ for i, fn in enumerate(fns):
     
     data = raw_data[param]
 
-    color = pyplot.cm.get_cmap('brg', len(fns))(i)
+    color = pyplot.cm.get_cmap('viridis', len(fns))(i)
     for k in itertools.compress(keys, selector):
-        axes.plot(data['x'], data[k], label='{} ({})'.format(data['label'], k), color=color, linestyle=ls[k])
+        axes.plot(data['x'], data[k]['avg'], label='{} ({})'.format(data['label'], k), color=color, linestyle=ls[k])
 
 param = dict(param)
 big_m, small_m, big_n, sigma = param['big_m'], param['small_m'], param['big_n'], param['sigma']
@@ -71,3 +71,33 @@ axes.legend()
 pyplot.savefig('aggregate_mse_plot.png')
 
 print 'Saved to aggregate_mse_plot.png'
+
+fig, axes = pyplot.subplots(1)
+fig.set_size_inches(8, 6)
+fig.set_dpi(200)
+
+for i, fn in enumerate(fns):
+    with open(fn, 'r') as f:
+        raw_data = pickle.load(f)
+    
+    if param not in raw_data:
+        continue
+    
+    data = raw_data[param]
+
+    color = pyplot.cm.get_cmap('viridis', len(fns))(i)
+    for k in itertools.compress(keys, selector):
+        axes.plot(data['x'], data[k]['var'], label='{} ({})'.format(data['label'], k), color=color, linestyle=ls[k])
+
+param = dict(param)
+big_m, small_m, big_n, sigma = param['big_m'], param['small_m'], param['big_n'], param['sigma']
+
+axes.grid(True, linestyle='dotted')
+axes.set_ylabel('Variance of MSE', fontsize=24)
+axes.set_xlabel(r'$\ell$', fontsize=24)
+axes.set_title(r"""\Huge Variance of MSE plots for various images
+                   \Large $\left ( M={},m={},N={},\sigma^2_n={} \right )$""".format(big_m, small_m, big_n, sigma))
+axes.legend()
+pyplot.savefig('aggregate_var_mse_plot.png')
+
+print 'Saved to aggregate_var_mse_plot.png'
