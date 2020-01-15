@@ -59,8 +59,8 @@ for i, fn in enumerate(fns):
     for k in itertools.compress(keys, selector):
         axes.plot(data['x'], data[k]['avg'], label='{} ({})'.format(data['label'], k), color=color, linestyle=ls[k])
 
-param = dict(param)
-big_m, small_m, big_n, sigma = param['big_m'], param['small_m'], param['big_n'], param['sigma']
+p = dict(param)
+big_m, small_m, big_n, sigma = p['big_m'], p['small_m'], p['big_n'], p['sigma']
 
 axes.grid(True, linestyle='dotted')
 axes.set_ylabel('Mean squared error', fontsize=24)
@@ -88,9 +88,6 @@ for i, fn in enumerate(fns):
     color = pyplot.cm.get_cmap('viridis', len(fns))(i)
     for k in itertools.compress(keys, selector):
         axes.plot(data['x'], data[k]['var'], label='{} ({})'.format(data['label'], k), color=color, linestyle=ls[k])
-
-param = dict(param)
-big_m, small_m, big_n, sigma = param['big_m'], param['small_m'], param['big_n'], param['sigma']
 
 axes.grid(True, linestyle='dotted')
 axes.set_ylabel('Variance of MSE', fontsize=24)
