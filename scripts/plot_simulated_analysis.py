@@ -57,13 +57,13 @@ for i, fn in enumerate(fns):
 
     color = pyplot.cm.get_cmap('brg', len(fns))(i)
     for k in itertools.compress(keys, selector):
-        axes.semilogy(data['x'], data[k], label='{} ({})'.format(data['label'], k), color=color, linestyle=ls[k])
+        axes.plot(data['x'], data[k], label='{} ({})'.format(data['label'], k), color=color, linestyle=ls[k])
 
 param = dict(param)
 big_m, small_m, big_n, sigma = param['big_m'], param['small_m'], param['big_n'], param['sigma']
 
 axes.grid(True, linestyle='dotted')
-axes.set_ylabel('(Log) Mean squared error', fontsize=24)
+axes.set_ylabel('Mean squared error', fontsize=24)
 axes.set_xlabel(r'$\ell$', fontsize=24)
 axes.set_title(r"""\Huge Aggregate MSE plots for various images
                    \Large $\left ( M={},m={},N={},\sigma^2_n={} \right )$""".format(big_m, small_m, big_n, sigma))
