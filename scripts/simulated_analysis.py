@@ -7,18 +7,22 @@ import ScriptHelper as Sh
 import multiprocessing
 
 
-def worker_task(fn, bm, key, l, data_dict, params, ks, handler):
-    result = {'key': key,
+def worker_task(fn, m, k, l, pd, p, ks, h):
+    result = {'key': k,
               'ell': l,
               'out': []}
     
     for subset in ks:
-        if 'overall' in params:
-            data_dict['lost_space'] = subset
-        elif 'buildup' in params:
-            data_dict['lost_space'] = subset[l:]
-        for i_data, f_data in hl.helpers.simulate(handler(fn, bm, 'r')(), **data_dict):
-            result['out'].append(numpy.sum([(x - y)**2 for x, y in zip(i_data[0], f_data[0])]))
+        packets_mse = []
+        if 'overall' in p:
+            pd['lost_space'] = subset
+        elif 'buildup' in p:
+            pd['lost_space'] = subset[l:]
+        # TODO: try to make this more efficient? there really is
+        #       no need to open the same file multiple times
+        for i_data, f_data in hl.helpers.simulate(h(fn, m, 'r')(), **pd):
+            packets_mse.append(numpy.sum([(x - y)**2 for x, y in zip(i_data[0], f_data[0])]))
+        result['out'].append(numpy.mean(packets_mse))
     
     return result
 
@@ -32,17 +36,21 @@ def simulation_calc(p, pd, **kwargs):
         print 'Processing {} (overall)...'.format(fname),
 
     big_n = p['big_n']
+    k_set = None
     x_points = []
     y_points = {k: collections.defaultdict(list) for k in pd}
+
+    total_tasks = 0
+    pool = multiprocessing.Pool(processes=3, maxtasksperchild=3)
+    queue = multiprocessing.Queue()
+
+    def add_to_queue(out):
+        queue.put(out)
     
     if 'buildup' in p:
         k_set = [random.sample(range(big_n), big_n) for _ in xrange(buildup_upper_limit)]
-
-    pool = multiprocessing.Pool()
-    futures = []
     
     for ell in range(1, big_n + 1):
-        print ell,
         pd['grid']['ell'] = pd['aggregate']['ell'] = ell
         pd['img']['ell'] = pd['line']['ell'] = ell
 
@@ -56,22 +64,24 @@ def simulation_calc(p, pd, **kwargs):
                     if sample not in k_set:
                         k_set.append(sample)
         
-        for k in pd:
-            futures.append(pool.apply_async(worker_task, (fname, big_m, k, ell, pd[k], p, k_set, handler)))
+        for key in pd:
+            pool.apply_async(worker_task, (fname, big_m, key, ell, pd[key], p, k_set, handler), callback=add_to_queue)
+            total_tasks += 1
 
         x_points.append(ell)
     
     total_result = collections.defaultdict(list)
-    for future in futures:
-        val = future.get()
+    ctr = 1
+    print_ctr = 0
+    while ctr <= total_tasks:
+        val = queue.get()
         total_result[val['key']].append((val['ell'], val['out']))
+        if (10 * ctr / total_tasks) > print_ctr:
+            print print_ctr,
+            print_ctr += 1
+        ctr += 1
     
-    for k, ord_list in total_result.items():
-        ord_list.sort()
-        vals = zip(*ord_list)[1]
-        for v in vals:
-            y_points[k]['avg'].append(numpy.mean(v))
-            y_points[k]['var'].append(numpy.var(v))
+    pool.close()
 
     data = {'x': x_points, 'label': im_name}
     data.update(y_points)
@@ -82,7 +92,7 @@ def simulation_calc(p, pd, **kwargs):
 
 if __name__ == '__main__':
     # list of filepaths
-    fnames = ['img/fly.jpeg']
+    fnames = ['img/dragon.png']
     # parameters
     big_m = 64
     small_m = 8
