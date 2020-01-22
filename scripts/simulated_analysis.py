@@ -80,6 +80,13 @@ def simulation_calc(p, pd, **kwargs):
             print print_ctr,
             print_ctr += 1
         ctr += 1
+        
+    for k in pd:
+        vals = total_result[k]
+        vals.sort()
+        for v in zip(*vals)[1]:
+            y_points[k]['avg'].append(numpy.mean(v))
+            y_points[k]['var'].append(numpy.var(v))
     
     pool.close()
 
