@@ -23,7 +23,8 @@ data = {'lamda': lamda, 'psi': psi,
         'partitions': partitions}
 
 import pprint
-print 'Lambdas: ', pprint.pprint(lamda)
+print 'Lambdas: '
+pprint.pprint(lamda)
 
 Sh.save_data('aggregate_statistics', params, data)
 print 'Saved (with params: {})'.format(params)
