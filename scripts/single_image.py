@@ -1,8 +1,12 @@
-import pprint
 import collections
+import numpy
+import pprint
 import random
+
 import holographic as hl
 import ScriptHelper as Sh
+
+from matplotlib import pyplot
 
 big_m = 64
 small_m = 8
@@ -59,6 +63,9 @@ pprint.pprint(lamda)
 if do_buildup:
     sp = random.sample(range(big_n), big_n)
 
+x_points = []
+y_points = []
+
 print 'Processing ell =',
 for i in xrange(1, big_n + 1):
     print i,
@@ -73,9 +80,31 @@ for i in xrange(1, big_n + 1):
     else:
         g = hl.helpers.simulate(image_in(), psi, lamda, partitions, big_m, small_m, big_n, sigma, ell=i)
 
-    for _, packet in g:
-        image_out(packet)
+    errors = []
+    for i_packet, o_packet in g:
+        image_out(o_packet)
+        for comp_pair in zip(i_packet, o_packet):
+            errors.append(hl.helpers.mean_squared_error(*comp_pair))
 
+    x_points.append(i)
+    y_points.append(numpy.mean(errors))
     image_out.close()
 
+formats = Sh.get_fname(fn), simul_mode, big_m, small_m, big_n, sigma, mode, stats_to_use
+
+fig, axes = pyplot.subplots(1)
+fig.set_size_inches(8, 6)
+fig.set_dpi(200)
+
+axes.grid(True, linestyle='dotted')
+axes.set_ylabel('Mean squared error', fontsize=24)
+axes.set_xlabel(r'$\ell$', fontsize=24)
+axes.set_title(r"""\Huge MSE plot for \texttt{{{}}} (on {} mode)
+                   \Large $\left ( M={},m={},N={},\sigma^2_n={},
+                   \textup{{mode}}={},\textup{{metric}}={} \right )$""".format(*formats))
+axes.legend()
+pyplot.savefig('single_image_mse_plot.png')
+
 print
+print 'Saved to single_image_mse_plot.png'
+
