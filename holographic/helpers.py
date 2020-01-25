@@ -24,16 +24,12 @@ def band_filter(val, lo, hi):
     return val
 
 
-def variance(iterable):
-    """Calculates variance of a set."""
-    mean = sum(iterable)/len(iterable)
-    return 1.0*sum([(mean-x)**2 for x in iterable])/len(iterable)
-
-
-def euc_norm(iterable):
-    """Calculates quadratic mean/Euclidean norm."""
-    result = sum([x**2 for x in iterable])
-    return (1.0 * result / len(iterable))**.5
+def mean_squared_error(iter_a, iter_b):
+    """Calculates mean squared error of two vectors."""
+    if len(iter_a) != len(iter_b):
+        raise ValueError('iterables have mismatching lengths (got {} and {})'.format(len(iter_a), len(iter_b)))
+    squared_error = [(a - b)**2 for a, b in zip(iter_a, iter_b)]
+    return numpy.mean(squared_error)
 
 
 def partition(iterable, size, random_mode=False):
