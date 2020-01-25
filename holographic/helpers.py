@@ -29,7 +29,7 @@ def mean_squared_error(iter_a, iter_b):
     if len(iter_a) != len(iter_b):
         raise ValueError('iterables have mismatching lengths (got {} and {})'.format(len(iter_a), len(iter_b)))
     squared_error = [(a - b)**2 for a, b in zip(iter_a, iter_b)]
-    return numpy.mean(squared_error)
+    return numpy.sum(squared_error)
 
 
 def partition(iterable, size, random_mode=False):
