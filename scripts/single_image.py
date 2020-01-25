@@ -90,21 +90,25 @@ for i in xrange(1, big_n + 1):
     y_points.append(numpy.mean(errors))
     image_out.close()
 
+print
 formats = Sh.get_fname(fn), simul_mode, big_m, small_m, big_n, sigma, mode, stats_to_use
+title_text = (r"\Huge MSE plot for \texttt{{{}}} (on {} mode)" "\n"
+              r"\Large $\left ( M={},m={},N={},\sigma^2_n={},"
+              r"\mbox{{mode}}={},\mbox{{metric}}=\mbox{{{}}} \right )$").format(*formats)
+
+pyplot.rc('text', usetex=True)
+pyplot.rc('font', family='Palatino')
 
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
 fig.set_dpi(200)
 
+axes.plot(x_points, y_points, color='black', linestyle='-')
+
 axes.grid(True, linestyle='dotted')
 axes.set_ylabel('Mean squared error', fontsize=24)
 axes.set_xlabel(r'$\ell$', fontsize=24)
-axes.set_title(r"""\Huge MSE plot for \texttt{{{}}} (on {} mode)
-                   \Large $\left ( M={},m={},N={},\sigma^2_n={},
-                   \textup{{mode}}={},\textup{{metric}}={} \right )$""".format(*formats))
-axes.legend()
+axes.set_title(title_text)
 pyplot.savefig('single_image_mse_plot.png')
 
-print
 print 'Saved to single_image_mse_plot.png'
-
