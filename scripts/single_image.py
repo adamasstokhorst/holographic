@@ -14,14 +14,15 @@ big_n = 8
 sigma = 0.01
 mode = 1
 
-fn = 'img/oldlady.jpg'
+fn = 'control/offering.jpg'
+img_mode = 'RGB'
 
 # the following accepts:
 #   'image' - image specific statistics
 #   'aggr'  - aggregate statistics
 #   'grid'  - grid-metric (L^1) statistics
 #   'line'  - line-metric (L^2) statistics
-stats_to_use = 'image'
+stats_to_use = 'aggr'
 
 # if False, use random selection of subspaces instead
 do_buildup = True
@@ -69,10 +70,10 @@ y_points = []
 print 'Processing ell =',
 for i in xrange(1, big_n + 1):
     print i,
-    image_in = hl.ImageHandler(fn, big_m, mode='r', color_mode='RGB')
+    image_in = hl.ImageHandler(fn, big_m, mode='r', color_mode=img_mode)
     fstring = '{}_{}_{}.png' if stats_to_use == 'image' else '{{}}_{{}}_{}_{{}}.png'.format(stats_to_use)
     outname = fstring.format(fn_prefix, Sh.get_fname(fn), i)
-    image_out = hl.ImageHandler(outname, big_m, mode='w', color_mode='RGB')
+    image_out = hl.ImageHandler(outname, big_m, mode='w', color_mode=img_mode)
     image_out.params(*image_in.params())
 
     if do_buildup:

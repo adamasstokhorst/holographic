@@ -22,7 +22,7 @@ def worker_task(fn, m, k, l, pd, p, ks, h):
         #       no need to open the same file multiple times
         for i_data, f_data in hl.helpers.simulate(h(fn, m, 'r')(), **pd):
             packets_mse.append(hl.helpers.mean_squared_error(i_data[0], f_data[0]))
-        result['out'].append(numpy.sum(packets_mse))
+        result['out'].append(numpy.mean(packets_mse))
     
     return result
 
@@ -99,7 +99,7 @@ def simulation_calc(p, pd, **kwargs):
 
 if __name__ == '__main__':
     # list of filepaths
-    fnames = ['img/dragon.png']
+    fnames = ['control/offering.jpg']
     # parameters
     big_m = 64
     small_m = 8
