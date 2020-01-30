@@ -63,7 +63,7 @@ class ImageHandler(object):
         pixels = [numpy.array(list(self._f.getdata(band=x))) for x in xrange(self._num_bands)]
         for i, p in enumerate(pixels):
             p.shape = self._height, self._width
-            pixels[i] = numpy.pad(p, ((0, bottom_pad), (0, right_pad)), 'edge') / 128.0 - 1
+            pixels[i] = numpy.pad(p, ((0, bottom_pad), (0, right_pad)), 'edge') / 127.5 - 1
 
         self._average = [numpy.zeros((1, self._block_size)) for i in xrange(self._num_bands)]
         for i, j in [(y, x) for y in xrange(ud_blocks) for x in xrange(lr_blocks)]:
@@ -83,7 +83,7 @@ class ImageHandler(object):
         pixels = [numpy.array(list(self._f.getdata(band=x))) for x in xrange(self._num_bands)]
         for i, p in enumerate(pixels):
             p.shape = self._height, self._width
-            pixels[i] = numpy.pad(p, ((0, bottom_pad), (0, right_pad)), 'edge') / 128.0 - 1
+            pixels[i] = numpy.pad(p, ((0, bottom_pad), (0, right_pad)), 'edge') / 127.5 - 1
 
         for i, j in [(y, x) for y in xrange(ud_blocks) for x in xrange(lr_blocks)]:
             d = [p[i*self._block_width:(i+1)*self._block_width, j*self._block_width:(j+1)*self._block_width].flatten() for p in pixels]
@@ -99,7 +99,7 @@ class ImageHandler(object):
         for arg in args:
             # for writing, set params first before calling
             pixels = reduce(lambda a, b: a + b, zip(*[x+y for x, y in zip(arg, self._average)]))
-            pixels = [band_filter(128*(x + 1), 0, 255) for x in pixels]
+            pixels = [band_filter(127.5*(x + 1), 0, 255) for x in pixels]
             pixels = numpy.array(pixels, dtype='uint8')
 
             if self._num_bands == 1:
