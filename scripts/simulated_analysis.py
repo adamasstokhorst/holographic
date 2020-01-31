@@ -99,15 +99,15 @@ def simulation_calc(p, pd, **kwargs):
 
 if __name__ == '__main__':
     # list of filepaths
-    fnames = ['control/offering.jpg']
+    fnames = ['control/twobirds.jpg', 'control/elephants.jpg'] #, 'img/borobudur.jpg', 'img/flood.jpg', 'img/merlion.jpg', 'img/oldlady.jpg']
     # parameters
     big_m = 64
-    small_m = 8
+    small_m = 4
     big_n = 8
-    sigma = 0.01
+    sigma = 0.25
     mode = 1
     # number of combinations to sample
-    buildup_upper_limit = 25
+    buildup_upper_limit = 100
     overall_sampling_limit = float('inf')
 
     handler = hl.ImageHandler
