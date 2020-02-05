@@ -1,3 +1,7 @@
+"""
+Plots the rho function and zeta_j's using aggregate eigenvalues.
+"""
+
 import math
 import pickle
 from matplotlib import pyplot

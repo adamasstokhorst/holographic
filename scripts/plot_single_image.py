@@ -1,7 +1,11 @@
-import collections
+"""
+Plots the MSE graphs for individual images using various parameters, as chosen
+by the user -- the modes, recovery procedure, and lambda profiles. The graphs
+will be overlaid in one image. This will not save the recovered images.
+"""
+
 import numpy
 import itertools
-import pprint
 import random
 
 import holographic as hl
@@ -9,6 +13,7 @@ import ScriptHelper as Sh
 
 from matplotlib import pyplot
 
+# --- PARAMETERS THAT MAY BE CHANGED ---
 big_m = 64
 small_m = 8
 big_n = 8
@@ -17,6 +22,7 @@ sigma = 0.01
 fn = 'img/dragon.png'
 img_mode = 'L'
 
+# --- END OF PARAMETERS, BEGIN CODE ---
 print 'Choose lines to display:'
 print '(mode 1, 2, 3 -- as binary string)'
 print '(e.g. 011 will display mode 2 plot and mode 3 plot)'

@@ -1,13 +1,17 @@
+"""
+Performs simulation on a selected image with specified parameters, saving the
+recovered image in the directory. This script automatically runs through all
+ell values as well.
+"""
+
 import collections
-import numpy
 import pprint
 import random
 
 import holographic as hl
 import ScriptHelper as Sh
 
-from matplotlib import pyplot
-
+# --- PARAMETERS THAT MAY BE CHANGED ---
 big_m = 64
 small_m = 8
 big_n = 8
@@ -27,6 +31,7 @@ stats_to_use = 'aggr'
 # if False, use random selection of subspaces instead
 do_buildup = True
 
+# --- END OF PARAMETERS, BEGIN CODE ---
 simul_mode = 'build-up' if do_buildup else 'random'
 fn_prefix = 'BUILDUP' if do_buildup else 'SINGLE'
 print 'Simulating {} recovery on {}'.format(simul_mode, fn)
@@ -81,35 +86,9 @@ for i in xrange(1, big_n + 1):
     else:
         g = hl.helpers.simulate(image_in(), psi, lamda, partitions, big_m, small_m, big_n, sigma, ell=i)
 
-    errors = []
     for i_packet, o_packet in g:
         image_out(o_packet)
-        for comp_pair in zip(i_packet, o_packet):
-            errors.append(hl.helpers.mean_squared_error(*comp_pair))
 
-    x_points.append(i)
-    y_points.append(numpy.mean(errors))
     image_out.close()
 
 print
-formats = Sh.get_fname(fn), simul_mode, big_m, small_m, big_n, sigma, mode, stats_to_use
-title_text = (r"\Huge MSE plot for \texttt{{{}}} (on {} mode)" "\n"
-              r"\Large $\left ( M={},m={},N={},\sigma^2_n={},"
-              r"\mbox{{mode}}={},\mbox{{metric}}=\mbox{{{}}} \right )$").format(*formats)
-
-pyplot.rc('text', usetex=True)
-pyplot.rc('font', family='Palatino')
-
-fig, axes = pyplot.subplots(1)
-fig.set_size_inches(8, 6)
-fig.set_dpi(200)
-
-axes.plot(x_points, y_points, color='black', linestyle='-')
-
-axes.grid(True, linestyle='dotted')
-axes.set_ylabel('Mean squared error', fontsize=24)
-axes.set_xlabel(r'$\ell$', fontsize=24)
-axes.set_title(title_text)
-pyplot.savefig('single_image_mse_plot.png')
-
-print 'Saved to single_image_mse_plot.png'

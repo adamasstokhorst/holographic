@@ -1,11 +1,20 @@
+"""
+Plots the theoretical best-case recovery for particular lambda profiles,
+as calculated by `theoretical_analysis.py`. Overlaps multiple plots.
+"""
+
+import collections
 import os
 import pickle
-import collections
 from matplotlib import pyplot
 
 pyplot.rc('text', usetex=True)
 pyplot.rc('font', family='Palatino')
 
+# --- PARAMETERS THAT MAY BE CHANGED ---
+hide_mode_plots = True
+
+# --- END OF PARAMETERS, BEGIN CODE ---
 fns = []
 for _, _, fns in os.walk('.\\'):
     break
@@ -49,7 +58,8 @@ for fn in fns:
         if mode <= 3:
             label = '{} (mode {})'.format(name, mode)
             lw = 1
-            continue  # comment this line to unhide mode 1/2/3 plots
+            if hide_mode_plots:
+                continue
         else:
             label = '{} (thr. best)'.format(name)
             lw = 2

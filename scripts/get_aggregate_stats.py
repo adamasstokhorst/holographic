@@ -1,13 +1,20 @@
+"""
+Computes eigenvalues by aggregating all images from a particular directory.
+"""
+
 import os
+import pprint
 import holographic as hl
 import ScriptHelper as Sh
 
+# --- PARAMETERS THAT MAY BE CHANGED ---
 big_m = 64
 small_m = 8
 big_n = 8
 sigma = 0.01
 folder = 'img/'
 
+# --- END OF PARAMETERS, BEGIN CODE ---
 fn = []
 for _, _, fn in os.walk(folder):
     break
@@ -22,7 +29,6 @@ params = {'big_m': big_m, 'small_m': small_m,
 data = {'lamda': lamda, 'psi': psi,
         'partitions': partitions}
 
-import pprint
 print 'Lambdas: '
 pprint.pprint(lamda)
 

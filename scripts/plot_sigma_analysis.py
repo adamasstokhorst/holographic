@@ -1,5 +1,10 @@
-import pickle
+"""
+Plots the theoretical best-case recovery for a particular image, while varying
+the noise, as calculated by `theoretical_analysis.py`.
+"""
+
 import collections
+import pickle
 from matplotlib import pyplot
 
 pyplot.rc('text', usetex=True)

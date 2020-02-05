@@ -1,3 +1,8 @@
+"""
+Plots the ordered eigenvalues for various metrics, including the aggregate
+ensemble. Run `get_aggregate_stats.py` with the desired parameters first.
+"""
+
 import holographic as hl
 import ScriptHelper as Sh
 from matplotlib import pyplot
@@ -5,11 +10,13 @@ from matplotlib import pyplot
 pyplot.rc('text', usetex=True)
 pyplot.rc('font', family='Palatino')
 
+# --- PARAMETERS THAT MAY BE CHANGED ---
 big_m = 64
 small_m = 8
 big_n = 8
 sigma = 0.01
 
+# --- END OF PARAMETERS, BEGIN CODE ---
 lamda_grid, _ = hl.statistic.get_lp_lambda(1, big_m)
 lamda_line, _ = hl.statistic.get_lp_lambda(2, big_m)
 

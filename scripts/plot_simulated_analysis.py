@@ -1,7 +1,11 @@
+"""
+Plots the result of `simulated_analysis.py`.
+"""
+
+import collections
+import itertools
 import os
 import pickle
-import itertools
-import collections
 from matplotlib import pyplot
 
 pyplot.rc('text', usetex=True)

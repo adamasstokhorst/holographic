@@ -1,3 +1,8 @@
+"""
+Generates a visualization of the orthonormal eigenvalues set; see Figure 3 in
+the paper.
+"""
+
 import numpy as np
 import holographic as hl
 import ScriptHelper as Sh
@@ -11,11 +16,13 @@ def get_coordinate(x, y):
         return layer**2 + layer + y - x
 
 
+# --- PARAMETERS THAT MAY BE CHANGED ---
 big_m = 64
 small_m = 8
 big_n = 8
 sigma = 0.01
 
+# --- END OF PARAMETERS, BEGIN CODE ---
 side_length = int((big_m + 1)**0.5)
 if side_length**2 != big_m:
     raise ValueError('big_m must be a perfect square. (got {})'.format(big_m))

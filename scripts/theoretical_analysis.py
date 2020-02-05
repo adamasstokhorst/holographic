@@ -1,8 +1,15 @@
-import itertools
+"""
+Calculates the theoretical best possible recovery (i.e. lowest MSE) for a
+given image and parameter set. Data is then saved, to be read by
+`plot_mode_analysis.py` and `plot_sigma_analysis.py`.
+"""
+
 import collections
+import itertools
 import holographic as hl
 import ScriptHelper as Sh
 
+# --- PARAMETERS THAT MAY BE CHANGED ---
 # list of filepaths
 fnames = ['img/bratan.jpg', 'img/dragon.png', 'img/fly.jpeg', 'img/bees.jpg', 'img/dish.jpg', 'img/owl.jpg']
 # parameters
@@ -11,6 +18,7 @@ small_m = 8
 big_n = 8
 sigma = 0.01
 
+# --- END OF PARAMETERS, BEGIN CODE ---
 params = {'big_m': big_m,
           'small_m': small_m,
           'big_n': big_n,
