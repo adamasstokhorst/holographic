@@ -69,6 +69,6 @@ axes.set_xlabel(r'$\ell$', fontsize=24)
 axes.set_title(r"""\Huge Calculated best case MSE plots for \texttt{{{}}}
                    \Large $\left ( M={},m={},N={} \right )$""".format(im_name, big_m, small_m, big_n))
 axes.legend()
-pyplot.savefig('sigma_analysis_plot.png')
+pyplot.savefig('sigma_analysis_plot.svg')
 
-print 'Saved to sigma_analysis_plot.png'
+print 'Saved to sigma_analysis_plot.svg'

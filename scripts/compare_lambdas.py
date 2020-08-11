@@ -42,6 +42,6 @@ axes.set_xlabel(r'$j$', fontsize=24)
 axes.set_title(r"""\Huge Lambda plots for different metrics
                    \Large $\left ( M={} \right )$""".format(big_m))
 axes.legend(fontsize=8, ncol=5)
-pyplot.savefig('lambda_compare_plots.png')
+pyplot.savefig('lambda_compare_plots.svg')
 
-print 'Saved to lambda_compare_plots.png'
+print 'Saved to lambda_compare_plots.svg'

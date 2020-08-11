@@ -76,6 +76,6 @@ axes.set_xlabel(r'$\ell$', fontsize=24)
 axes.set_title(r"""\Huge Calculated best case MSE plots for various data
                    \Large $\left ( M={},m={},N={},\sigma^2_n={} \right )$""".format(big_m, small_m, big_n, sigma))
 axes.legend()
-pyplot.savefig('mode_analysis_plot.png')
+pyplot.savefig('mode_analysis_plot.svg')
 
-print 'Saved to mode_analysis_plot.png'
+print 'Saved to mode_analysis_plot.svg'

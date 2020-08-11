@@ -44,7 +44,7 @@ psi_matrices = {'aggregate': psi_agg,
 patch_order = np.fromfunction(np.vectorize(get_coordinate), (side_length, side_length), dtype=int).flatten()
 
 for k, psi in psi_matrices.items():
-    img = hl.handlers.ImageHandler('psi_{}.png'.format(k), big_m, 'w')
+    img = hl.handlers.ImageHandler('psi_{}.svg'.format(k), big_m, 'w')
     img.params(big_m, big_m, np.zeros((side_length, side_length)))
 
     for col_index in list(patch_order):
@@ -55,4 +55,4 @@ for k, psi in psi_matrices.items():
 
     img.close()
 
-    print 'Saved to psi_{}.png'.format(k)
+    print 'Saved to psi_{}.svg'.format(k)

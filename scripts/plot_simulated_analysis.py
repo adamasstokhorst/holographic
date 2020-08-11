@@ -72,9 +72,9 @@ axes.set_xlabel(r'$\ell$', fontsize=24)
 axes.set_title(r"""\Huge Average MSE plots for various images
                    \Large $\left ( M={},m={},N={},\sigma^2_n={} \right )$""".format(big_m, small_m, big_n, sigma))
 axes.legend()
-pyplot.savefig('aggregate_mse_plot.png')
+pyplot.savefig('aggregate_mse_plot.svg')
 
-print 'Saved to aggregate_mse_plot.png'
+print 'Saved to aggregate_mse_plot.svg'
 
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
@@ -99,6 +99,6 @@ axes.set_xlabel(r'$\ell$', fontsize=24)
 axes.set_title(r"""\Huge Variance of MSE plots for various images
                    \Large $\left ( M={},m={},N={},\sigma^2_n={} \right )$""".format(big_m, small_m, big_n, sigma))
 axes.legend()
-pyplot.savefig('aggregate_var_mse_plot.png')
+pyplot.savefig('aggregate_var_mse_plot.svg')
 
-print 'Saved to aggregate_var_mse_plot.png'
+print 'Saved to aggregate_var_mse_plot.svg'
