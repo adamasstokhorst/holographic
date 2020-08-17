@@ -121,6 +121,6 @@ axes.set_ylabel('Mean squared error', fontsize=24)
 axes.set_xlabel(r'$\ell$', fontsize=24)
 axes.set_title(title_text)
 axes.legend()
-pyplot.savefig('single_image_composite_plot.svg')
+pyplot.savefig('single_image_composite_plot.eps')
 
-print 'Saved to single_image_composite_plot.svg'
+print 'Saved to single_image_composite_plot.eps'

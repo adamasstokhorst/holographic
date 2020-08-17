@@ -58,9 +58,9 @@ axes.set_ylabel(r'\Large $\rho (j)$')
 axes.set_yticks([min(rho), km, max(rho)])
 axes.set_xlabel(r'\Large $j$')
 axes.set_xticks(range(0, big_m+1, 8))
-pyplot.savefig('rho_plot.svg')
+pyplot.savefig('rho_plot.eps')
 
-print 'Saved to rho_plot.svg'
+print 'Saved to rho_plot.eps'
 
 fig, axes = pyplot.subplots(1)
 fig.set_size_inches(8, 6)
@@ -83,6 +83,6 @@ axes.set_ylabel(r'\Large $\zeta (j)$')
 axes.set_yticks([min(zetas), km, max(zetas)])
 axes.set_xlabel(r'\Large $j$')
 axes.set_xticks(range(0, big_m+1, 8))
-pyplot.savefig('zeta_plot.svg')
+pyplot.savefig('zeta_plot.eps')
 
-print 'Saved to zeta_plot.svg'
+print 'Saved to zeta_plot.eps'
